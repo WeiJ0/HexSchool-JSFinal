@@ -1,7 +1,7 @@
 const colorToTen = (color) => Array(10).fill(color);
 
 const theme = {
-    fontFamily: 'Noto Sans TC',
+    fontFamily: "Noto Sans TC",
     colorScheme: 'light',
     colors: {
         'custom-primary': colorToTen('#1C284D'),
