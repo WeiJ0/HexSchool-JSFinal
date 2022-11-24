@@ -1,5 +1,7 @@
+import { Title } from "@mantine/core";
+
 export default function Home() {
   return <>
-    <h1>123</h1>
+    <Title order={1}>This is h1 title</Title>
   </>;
 }
