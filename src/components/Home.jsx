@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { MediaQuery, Container, Grid, Box, BackgroundImage, Title, Flex, Button } from "@mantine/core";
+import { MediaQuery, Container, Grid, Divider, Box, BackgroundImage, Title, Flex, Button } from "@mantine/core";
 import { Carousel } from '@mantine/carousel';
-import { IconFileText, IconMoodSmile} from '@tabler/icons';
+import { IconFileText, IconMoodSmile } from '@tabler/icons';
 import { useViewportSize } from '@mantine/hooks';
 
 import CaseCard from "./cards/CaseCard";
+import HomeCarousel from "./HomeCarousel";
 
 import BannerImg from "../assets/home-banner.png";
 import BannerMbImg from "../assets/home-banner-mobile.png";
@@ -136,9 +137,12 @@ const HomeComponent = () => {
     return (
         <>
             <Container size="xl" px={bannerPaddingX}>
-                <Box py={{ base: 0, md: 48 }} >
+                <Box py={{ base: 0, md: 48 }} mb={120} >
                     <Banner height={height} width={width} />
                     <NewCases height={height} width={width} />
+                    <HomeCarousel />
+                    <Divider mt={80} size="md" />
+                    <HomeCarousel />
                 </Box>
             </Container>
         </>
