@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Image from 'next/image'
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router'
 
+import Image from 'next/image'
 import { MediaQuery, Box, Flex, Container, Drawer, Burger, Button } from '@mantine/core';
 import UsersModal from '../components/modals/UsersModal';
 
@@ -9,8 +10,9 @@ import logo from "../assets/logo.png";
 import IconUser from "../assets/icon-user.png";
 
 const Header = () => {
+    const router = useRouter()
     const dispatch = useDispatch();
-
+    const isLogin = useSelector(state => state.userInfo.id);
     const [openMenu, setOpenMenu] = useState(false);
 
     const openUserModal = () => {
@@ -51,6 +53,10 @@ const Header = () => {
         }
     }
 
+    useEffect(() => {
+        console.log(isLogin);
+    },[])
+
     return (
         <header>
             <UsersModal />
@@ -65,7 +71,7 @@ const Header = () => {
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找案件</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>我要發案</Button>
-                                    <Button size='xl' pr={0} variant="subtle" onClick={() => openUserModal()} >
+                                    <Button size='xl' pr={0} variant="subtle" onClick={() => isLogin ? router.push('/User') : openUserModal()} >
                                         <Image src={IconUser} alt="使用者" width={33} height={33} />
                                     </Button>
                                 </Flex>

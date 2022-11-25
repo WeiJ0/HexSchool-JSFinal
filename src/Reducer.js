@@ -6,6 +6,9 @@ const initState = {
   userInfo: {
     email: "",
     userId: "",
+    nickname: "",
+    token: "",
+    avatar: ""
   },
   userModalOpen: false,
 };
@@ -14,8 +17,12 @@ const reducer = (state = initState, action) => {
   switch (action.type) {
     case LOGIN_USER: {
       state.userInfo.email = action.payload.email;
-      state.userInfo.userId = action.payload.userId;
-      return { ...state, userInfo };
+      state.userInfo.userId = action.payload.id;
+      state.userInfo.nickname = action.payload.nickname;
+      state.userInfo.token = action.payload.token;
+      state.userInfo.avatar = action.payload.avatar;
+      console.log(state);
+      return { ...state };
     }
 
     case OPEN_USER_MODAL: {

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const userRequest = axios.create({
-    baseURL: 'https://weij0-app.herokuapp.com/users/'
+    /* baseURL: 'https://weij0-app.herokuapp.com/users/' */
+    baseURL: 'http://localhost:3001/users/'
 });
 
 // 確認是否已註冊
