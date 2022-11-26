@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { userActions } from '../../slices/userSlice';
+
 import { Modal, TextInput, PasswordInput, LoadingOverlay, Text, Button, Group, Box, Stepper } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import * as api from "../../helpers/api";
@@ -64,7 +66,7 @@ const InputEmail = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                formCheck.setErrors({ email: message });
+                formCheck.setErrors({ email: err });
                 setLoading(false);
             })
     }
@@ -87,13 +89,8 @@ const InputEmail = () => {
                         formInput.setErrors({ password: message });
                     else if (code === 0) {
                         // 登入成功
-                        dispatch({
-                            type: 'LOGIN_USER',
-                            payload: message
-                        });
-                        dispatch({
-                            type: 'CLOSE_USER_MODAL'
-                        });
+                        dispatch(userActions.signin(message));
+                        dispatch(userActions.closeModal());
                     }
                     setLoading(false);
                 }).catch((err) => {
@@ -113,18 +110,12 @@ const InputEmail = () => {
             api.userSignUp(data)
                 .then((res) => {
                     const { code, message } = res.data;
-                    console.log(message);
                     if (code === -1)
                         formInput.setErrors({ nickname: message });
                     else {
                         // 註冊成功
-                        dispatch({
-                            type: 'LOGIN_USER',
-                            payload: message
-                        });
-                        dispatch({
-                            type: 'CLOSE_USER_MODAL'
-                        });
+                        dispatch(userActions.signin(message));
+                        dispatch(userActions.closeModal());
                     }
                     setLoading(false);
                 })
@@ -211,12 +202,10 @@ const InputEmail = () => {
 }
 
 const UsersModal = () => {
-    const modalOpen = useSelector(state => state.userModalOpen);
+    const modalOpen = useSelector(state => state.user.userModalOpen);
     const dispatch = useDispatch();
     const closeUserModal = () => {
-        dispatch({
-            type: 'CLOSE_USER_MODAL'
-        });
+        dispatch(userActions.closeModal());
     };
     return (
         <>

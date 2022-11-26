@@ -1,16 +1,8 @@
-export const loadState = () => {
-    try {
-        const serializedState = localStorage.getItem('state');
-        if (serializedState === null) {
-            return undefined;
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        return undefined;
-    }
-};
+import { configureStore } from '@reduxjs/toolkit'
+import userReducer from '../slices/userSlice'
 
-export const saveState = (state) => {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
-}
+export const store = configureStore({
+    reducer: {
+        user: userReducer,
+    }
+})

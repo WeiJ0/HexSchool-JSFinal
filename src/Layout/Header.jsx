@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { userActions } from '../slices/userSlice';
+
 import { useRouter } from 'next/router'
 
 import Image from 'next/image'
@@ -12,14 +14,20 @@ import IconUser from "../assets/icon-user.png";
 const Header = () => {
     const router = useRouter()
     const dispatch = useDispatch();
-    const isLogin = useSelector(state => state.userInfo.id);
+    console.log(router);
+    // 抓取 state user id 判斷是否有登入
+    const isLogin = useSelector(state => state.user.user.id);
+
     const [openMenu, setOpenMenu] = useState(false);
 
     const openUserModal = () => {
-        dispatch({
-            type: 'OPEN_USER_MODAL'
-        });
+        dispatch(userActions.openModal());
     };
+
+    const toUserPage = () => {
+        if (router.route !== '/User')
+            router.push('/User');
+    }
 
     const navLinkStyle = {
         padding: '0 10px',
@@ -53,9 +61,7 @@ const Header = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(isLogin);
-    },[])
+    useEffect(() => { }, [isLogin])
 
     return (
         <header>
@@ -71,7 +77,7 @@ const Header = () => {
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找案件</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>我要發案</Button>
-                                    <Button size='xl' pr={0} variant="subtle" onClick={() => isLogin ? router.push('/User') : openUserModal()} >
+                                    <Button size='xl' pr={0} variant="subtle" onClick={() => isLogin ? toUserPage() : openUserModal()} >
                                         <Image src={IconUser} alt="使用者" width={33} height={33} />
                                     </Button>
                                 </Flex>
