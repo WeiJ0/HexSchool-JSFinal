@@ -1,7 +1,7 @@
-import HomeComponent from "../src/components/Home";
+import UserPageComponent from "../src/components/UserPage";
 
-export default function Home() {
+export default function UserPage() {
   return (
-    <HomeComponent />
+    <UserPageComponent />
   )
 }

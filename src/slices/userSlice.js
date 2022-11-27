@@ -11,6 +11,7 @@ const initialUserInfo =
     {
         id: '',
         email: '',
+        intro: '',
         nickname: '',
         token: '',
         avatar: '',

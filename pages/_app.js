@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 // custom theme for ui framework
-import theme from "../src/custsom.js";
+import theme from "../src/helpers/custsom.js";
 // custom css
 import "../src/styles/globals.css";
 
