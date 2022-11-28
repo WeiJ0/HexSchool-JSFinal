@@ -32,14 +32,13 @@ const userSlice = createSlice({
         closeModal: (state) => {
             state.userModalOpen = false
         },
-        // 登入
-        signin: (state, action) => {
-            console.log(action);
+        // 登入、修改
+        update: (state, action) => {
             state.user = action.payload;
             setLocalStorage(action.payload);
         },
-        // 登出
-        signout: (state) => {
+        // 登出、清空
+        clear: (state) => {
             Object.keys(state.user).forEach(key => {
                 state.user[key] = '';
             })

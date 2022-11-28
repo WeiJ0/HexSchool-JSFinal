@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 // next.js & ui framework
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from '@mantine/notifications';
 // custom theme for ui framework
 import theme from "../src/helpers/custsom.js";
 // custom css
@@ -25,9 +26,11 @@ export default function App(props) {
 
       <Provider store={store}>
         <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <NotificationsProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </NotificationsProvider>
         </MantineProvider>
       </Provider>
     </>

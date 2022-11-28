@@ -14,9 +14,9 @@ import IconUser from "../assets/icon-user.png";
 const Header = () => {
     const router = useRouter()
     const dispatch = useDispatch();
-    console.log(router);
+
     // 抓取 state user id 判斷是否有登入
-    const isLogin = useSelector(state => state.user.user.id);
+    const isLogin = useSelector(state => state.user.user.userId );
 
     const [openMenu, setOpenMenu] = useState(false);
 

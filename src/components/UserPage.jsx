@@ -1,8 +1,15 @@
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router'
+
 import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex, Avatar } from '@mantine/core';
-import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile } from '@tabler/icons';
+import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile, IconCheck, IconX } from '@tabler/icons';
+import { userActions } from '../slices/userSlice';
 
 import PageBreadcrumb from './PageBreadcrumb';
+
+import * as api from "../helpers/api";
+import * as notify from "../helpers/notify";
 
 const UserTool = () => {
     return (
@@ -33,14 +40,60 @@ const UserTool = () => {
     )
 }
 
-const UserInfoEdit = ({ user }) => {
+const UserInfoEdit = () => {
+    const dispatch = useDispatch()
+    const userInfo = useSelector(state => state.user.user);
+    const [userNickname, setUserNickname] = useState(userInfo.userNickname);
+    const [userIntro, setUserIntro] = useState(userInfo.userIntro);
+
+    const updateIntro = () => {
+        api.userEditInfo(userNickname, userIntro)
+            .then(res => {
+                const { code, message } = res.data;
+
+                if (code === 1) {
+                    notify.showSuccess(message);
+                    dispatch(userActions.update(message));
+                }
+                else
+                    notify.showError(message);
+            })
+            .catch(err => {
+                notify.showError(err.message);
+            })
+    }
+
+    const updateAvatar = (file) => {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('uid', userInfo.userId);
+        formData.append('token', userInfo.token);
+
+        api.userUploadAvatar(formData)
+            .then(res => {
+                const { code, message } = res.data;
+
+                if (code === 1) {
+                    notify.showSuccess(message);
+                    dispatch(userActions.update(message));
+                }
+                else
+                    notify.showError(message);
+            })
+            .catch(err => {
+                notify.showError(err.message);
+            })
+    }
+
+    useEffect(() => { }, [userInfo]);
     return (
         <>
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
                 <Grid.Col span={5}>
                     <Flex direction="column" align="center">
-                        <Avatar src={user.avatar} size={230} variant="outline" sx={{ border: "none" }} bg={'transparent'} />
-                        <FileInput placeholder="上傳個人照片" color="custom-primary.1" size="md" variant="unstyled" accept="image/png,image/jpeg" />
+                        <Avatar src={userInfo.userAvatar} size={230} variant="outline" sx={{ border: "none" }} bg={'transparent'} />
+                        <FileInput placeholder="上傳個人照片" color="custom-primary.1" size="md" variant="unstyled"
+                            accept="image/png,image/jpeg" onChange={(e) => updateAvatar(e)} />
                     </Flex>
                 </Grid.Col>
                 <Grid.Col span={7}>
@@ -48,7 +101,8 @@ const UserInfoEdit = ({ user }) => {
                         <Grid gutter="sm" >
                             <Grid.Col span={4}>暱稱</Grid.Col>
                             <Grid.Col span={8}>
-                                <TextInput placeholder="Nickname" mb={30} value={user.nickname} />
+                                <TextInput placeholder="Nickname" mb={30} value={userNickname}
+                                    onChange={((e) => setUserNickname(e.target.value))} />
                             </Grid.Col>
                         </Grid>
                         <Grid gutter="sm">
@@ -57,7 +111,8 @@ const UserInfoEdit = ({ user }) => {
                                 <Textarea
                                     label=""
                                     placeholder=""
-                                    value={user.intro}
+                                    value={userIntro}
+                                    onChange={((e) => setUserIntro(e.target.value))}
                                     autosize
                                     minRows={5}
                                 />
@@ -65,7 +120,7 @@ const UserInfoEdit = ({ user }) => {
                         </Grid>
 
                         <Flex mt={24} justify="flex-end">
-                            <Button size="md" fw={400} >儲存</Button>
+                            <Button size="md" fw={400} onClick={updateIntro} >儲存</Button>
                         </Flex>
                     </Box>
                 </Grid.Col>
@@ -75,12 +130,23 @@ const UserInfoEdit = ({ user }) => {
 }
 
 const UserPage = () => {
-    const userInfo = useSelector(state => state.user.user);
-
+    const router = useRouter()
+    const dispatch = useDispatch()
+    const userState = useSelector(state => state.user.user);
+    const [userInfo, setUserInfo] = useState({});
     const pageData = [
         { title: '首頁', href: '/' },
         { title: '會員中心', href: '/User' },
     ]
+
+    const logout = () => {
+        dispatch(userActions.clear());
+        router.push('/');
+    }
+
+    useEffect(() => {
+        setUserInfo(userState);
+    }, []);
 
     return (
         <>
@@ -91,13 +157,13 @@ const UserPage = () => {
                     </Box>
                     <Box mb={60}>
                         <Flex>
-                            <Title order={4} mr={32}>歡迎會員： [{userInfo.nickname}]</Title>
+                            <Title order={4} mr={32}>歡迎會員： {userInfo.userNickname} </Title>
                             <Box>
                                 <Button fw={400} variant="subtle">變更會員密碼</Button>
-                                <Button fw={400} variant="subtle">登出</Button>
+                                <Button fw={400} variant="subtle" onClick={logout}>登出</Button>
                             </Box>
                         </Flex>
-                        <UserInfoEdit user={userInfo} />
+                        <UserInfoEdit />
                     </Box>
                     <Box mb={60}>
                         <UserTool />

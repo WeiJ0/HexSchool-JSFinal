@@ -14,7 +14,6 @@ const InputEmail = () => {
     const [isExist, setExist] = useState(false);
     const [step, setStep] = useState(0);
 
-
     const formCheck = useForm({
         initialValues: {
             email: '',
@@ -51,6 +50,7 @@ const InputEmail = () => {
         api.userEmailCheck(email)
             .then((res) => {
                 const { code, message } = res.data;
+                console.log(code, message)
                 if (code === -1)
                     formCheck.setErrors({ email: message });
                 else if (code === 1) {
@@ -79,7 +79,7 @@ const InputEmail = () => {
             // 登入
             data = {
                 email: userEmail,
-                pwd: value.password,
+                password: value.password,
             }
 
             api.userSignIn(data)
@@ -89,7 +89,7 @@ const InputEmail = () => {
                         formInput.setErrors({ password: message });
                     else if (code === 0) {
                         // 登入成功
-                        dispatch(userActions.signin(message));
+                        dispatch(userActions.update(message));
                         dispatch(userActions.closeModal());
                     }
                     setLoading(false);
@@ -103,7 +103,7 @@ const InputEmail = () => {
             // 註冊
             data = {
                 email: userEmail,
-                pwd: value.password,
+                password: value.password,
                 nickname: value.nickname,
             }
 
@@ -114,7 +114,7 @@ const InputEmail = () => {
                         formInput.setErrors({ nickname: message });
                     else {
                         // 註冊成功
-                        dispatch(userActions.signin(message));
+                        dispatch(userActions.update(message));
                         dispatch(userActions.closeModal());
                     }
                     setLoading(false);
