@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+import * as notify from "../helpers/notify";
+import { changeRouter } from "./router";
+
 const userRequest = axios.create({
     /* baseURL: 'https://weij0-app.herokuapp.com/users/' */
     baseURL: 'http://localhost:3001/users/'
@@ -18,8 +21,10 @@ userAvatarUpload.interceptors.request.use(
         return response;
     },
     function (error) {
-        if (error.response.status === 401) {
-            console.log('Unauthorized');
+        if (error.response && error.response.status === 401) {
+            notify.showError('登入時效已過期，請重新登入');
+            changeRouter('/');
+            return;
         }
     }
 )
