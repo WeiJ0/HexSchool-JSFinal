@@ -15,20 +15,6 @@ const userAvatarUpload = axios.create({
     }
 })
 
-userAvatarUpload.interceptors.request.use(
-    function (response) {
-        // Do something with response data
-        return response;
-    },
-    function (error) {
-        if (error.response && error.response.status === 401) {
-            notify.showError('登入時效已過期，請重新登入');
-            changeRouter('/');
-            return;
-        }
-    }
-)
-
 // 確認是否已註冊
 export const userEmailCheck = (email) => userRequest.post('/email', { email });
 // 註冊
@@ -48,3 +34,6 @@ export const userUploadAvatar = (formData) => {
     userAvatarUpload.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return userAvatarUpload.post('', formData);
 }
+
+// 取得聯絡資訊 
+export const userInfo = (data) => userRequest.post('/info', data);
