@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-import * as notify from "../helpers/notify";
-import { changeRouter } from "./router";
+const getToken = () => {
+    return JSON.parse(localStorage.getItem('userInfo'))['token'];
+}
 
 const userRequest = axios.create({
     /* baseURL: 'https://weij0-app.herokuapp.com/users/' */
@@ -21,8 +22,13 @@ export const userEmailCheck = (email) => userRequest.post('/email', { email });
 export const userSignUp = (data) => userRequest.post('/signup', data);
 // 登入
 export const userSignIn = (data) => userRequest.post('/signin', data);
-// 刷新 Token
-export const userRefreshToken = (data) => userRequest.post('/refreshToken', data);
+// 檢查 Token
+export const userCheck = (data) => {
+    const token = getToken();
+    if (token)
+        userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return userRequest.post('/check', data);
+}
 // 變更暱稱及簡介
 export const userEditInfo = (data) => userRequest.post('/editInfo', data);
 // 上傳大頭照
@@ -34,6 +40,18 @@ export const userUploadAvatar = (formData) => {
     userAvatarUpload.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return userAvatarUpload.post('', formData);
 }
+// 取得聯絡資訊
+export const userGetContact = (data) => {
+    const token = getToken();
+    if (token)
+        userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-// 取得聯絡資訊 
-export const userInfo = (data) => userRequest.post('/info', data);
+    return userRequest.post('/contact', data);
+}
+// 變更聯絡資訊
+export const userEditContact = (data) => {
+    const token = getToken();
+    if (token)
+        userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return userRequest.post('/editContact', data)
+};

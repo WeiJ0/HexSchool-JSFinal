@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
+import Image from 'next/image';
 
 import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex, Avatar } from '@mantine/core';
 import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile, IconCheck, IconX } from '@tabler/icons';
@@ -12,6 +13,7 @@ import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
 
 const UserTool = () => {
+    const router = useRouter();
     return (
         <>
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
@@ -19,7 +21,11 @@ const UserTool = () => {
                     <Flex direction="column" align="center">
                         <Title order={5}>我是發案方</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
-                            <Button leftIcon={<IconPhoneCalling size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>聯絡方式維護</Button>
+                            <Button leftIcon={<IconPhoneCalling size={20} />}
+                                variant="outline" fw={400}
+                                fullWidth size="md" my={10}
+                                onClick={() => { router.push('/Contact/Offerer') }}
+                            >聯絡方式維護</Button>
                             <Button leftIcon={<IconList size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>已發案件列表</Button>
                             <Button leftIcon={<IconStar size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>收藏工程師列表</Button>
                         </Flex>
@@ -29,7 +35,9 @@ const UserTool = () => {
                     <Flex direction="column" align="center">
                         <Title order={5}>我是工程師</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
-                            <Button leftIcon={<IconPencil size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>個人簡歷維護</Button>
+                            <Button leftIcon={<IconPencil size={20} />}
+                                variant="outline" fw={400} fullWidth size="md" my={10}
+                                onClick={() => { router.push('/Contact/Engineer') }}>個人簡歷維護</Button>
                             <Button leftIcon={<IconFile size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>作品集維護</Button>
                             <Button leftIcon={<IconStar size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>收藏案件列表</Button>
                         </Flex>
@@ -43,6 +51,7 @@ const UserTool = () => {
 const UserInfoEdit = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user.user);
+    const [userAvatar, setUserAvatar] = useState('');
     const [userNickname, setUserNickname] = useState(userInfo.userNickname);
     const [userIntro, setUserIntro] = useState(userInfo.userIntro);
 
@@ -73,7 +82,7 @@ const UserInfoEdit = () => {
             .then(res => {
                 const { code, message } = res.data;
 
-                if (code === 1) {
+                if (code === 0) {
                     notify.showSuccess(message);
                     dispatch(userActions.update(message));
                 }
@@ -85,13 +94,17 @@ const UserInfoEdit = () => {
             })
     }
 
+
     useEffect(() => { }, [userInfo]);
+    useEffect(() => {
+        setUserAvatar(userInfo.userAvatar);
+    }, []);
     return (
         <>
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
                 <Grid.Col span={5}>
                     <Flex direction="column" align="center">
-                        <Avatar src={userInfo.userAvatar} size={230} variant="outline" sx={{ border: "none" }} bg={'transparent'} />
+                        <img src={userAvatar || ''} alt="個人照片" width={200} height={200} style={{ objectFit: 'cover' }} />
                         <FileInput placeholder="上傳個人照片" color="custom-primary.1" size="md" variant="unstyled"
                             accept="image/png,image/jpeg" onChange={(e) => updateAvatar(e)} />
                     </Flex>
@@ -111,7 +124,7 @@ const UserInfoEdit = () => {
                                 <Textarea
                                     label=""
                                     placeholder=""
-                                    value={userIntro}
+                                    value={userIntro || ''}
                                     onChange={((e) => setUserIntro(e.target.value))}
                                     autosize
                                     minRows={5}
@@ -139,6 +152,25 @@ const UserPage = () => {
         { title: '會員中心', href: '/User' },
     ]
 
+    const checkUserInfo = (uid, token) => {
+        api.userCheck({
+            userId: uid,
+            token
+        }).then(res => {
+            const { code, message } = res.data;
+
+            if (code != 0) {
+                notify.showError(message);
+                return;
+            }
+        }).catch(err => {
+            notify.showError('登入 Token 已過期，請重新登入');
+            dispatch(userActions.clear());
+            router.push('/');
+            return;
+        })
+    }
+
     const logout = () => {
         dispatch(userActions.clear());
         router.push('/');
@@ -146,7 +178,9 @@ const UserPage = () => {
 
     useEffect(() => {
         setUserInfo(userState);
-    }, []);
+        checkUserInfo(userState.userId, userState.token);
+
+    }, [userState]);
 
     return (
         <>
