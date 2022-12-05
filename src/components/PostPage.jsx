@@ -1,0 +1,180 @@
+import { useState } from 'react';
+import { Container, Title, TextInput, Textarea, FileInput, NumberInput, Radio, Button, Group, Box, SimpleGrid, LoadingOverlay } from '@mantine/core';
+import { IconMail, IconPhone, IconBrandFacebook, IconDeviceMobile, IconCalendar } from '@tabler/icons';
+import { useForm } from '@mantine/form';
+import { DatePicker } from '@mantine/dates';
+import { useEffect } from 'react';
+import dayjs from 'dayjs';
+
+import PageBreadcrumb from './PageBreadcrumb';
+import * as notify from "../helpers/notify";
+import * as api from "../helpers/api";
+
+const Post = ({ isEdit }) => {
+    const [isLoading, setLoading] = useState(false);
+    const [isSubmit, setSubmit] = useState(false);
+
+    const pageData = [
+        { title: '首頁', href: '/' },
+        { title: '我要發案', href: '#' },
+    ]
+
+    const form = useForm({
+        initialValues: {
+            title: "",
+            content: "",
+            service: "",
+            date: "",
+            files: [],
+            email: "",
+            phone: "",
+            facebook: "",
+            line: "",
+            desc: ""
+        },
+        validate: {
+            title: (value) => (value.length > 0 ? null : '需要輸入標題'),
+            title: (value) => (value.length > 15 ? null : '標題需少於15字'),
+            content: (value) => (value.length > 0 ? null : '需要輸入內容'),
+            content: (value) => (value.length > 200 ? null : '內容須少於200字'),
+            serviceType: (value) => (value ? null : '需要選擇服務'),
+            finishDate: (value) => (value ? null : '需要選擇完成日期'),
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email格式錯誤'),
+            minPrice: (value) => (value > 0 ? null : '最低預算需大於0'),
+            maxPrice: (value) => (value ? null : '需要輸入預算上限'),
+        }
+    });
+
+    const initContact = () => {
+        api.userGetContact({ type: "offerer" })
+            .then(res => {
+                setLoading(false);
+                const { email, phone, facebook, line, desc } = res.data.message;
+                form.setFieldValue('email', email);
+                form.setFieldValue('phone', phone);
+                form.setFieldValue('facebook', facebook);
+                form.setFieldValue('line', line);
+                form.setFieldValue('desc', desc);
+            })
+            .catch(err => { })
+    }
+
+    const submitForm = () =>{
+        setSubmit(true);
+
+        if(isEdit){
+
+        }else{
+
+        }
+    }
+
+    const initForm = () => {
+        initContact();
+    }
+
+    useEffect(() => { initForm() }, []);
+
+    return (
+        <>
+            <Container size="xl">
+                <Box mt={40} mb={60}>
+                    <LoadingOverlay visible={isLoading} overlayBlur={2} />
+                    <PageBreadcrumb pageData={pageData} />
+                </Box>
+                <Box mt={20} mb={60} w="50%" mx="auto">
+
+                    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                        <TextInput withAsterisk label="案件標題" placeholder='至多15字' {...form.getInputProps('title')} />
+
+                        <Textarea mt="sm" label="案件說明" minRows={5} placeholder='至多200字'
+                            withAsterisk {...form.getInputProps('content')} />
+
+                        <FileInput mt="sm" label="案件附件" description="限上傳圖檔或是 pdf，至多 5 個"
+                            placeholder='點擊選擇' multiple />
+
+                        <SimpleGrid mt="sm" cols={2}>
+                            <div>
+                                <DatePicker placeholder="最短需一天時間" label="預計完成時間"
+                                    icon={<IconCalendar size={16} />}
+                                    minDate={dayjs(new Date()).add(1, 'days').toDate()}
+                                    withAsterisk
+                                    {...form.getInputProps('finishDate')} />
+                            </div>
+                            <div>
+                                <Radio.Group name="serviceType" label="作業地點" withAsterisk
+                                    {...form.getInputProps('serviceType')} >
+                                    <Radio value="remote" label="遠端作業" />
+                                    <Radio value="office" label="進辦公室" />
+                                </Radio.Group>
+                            </div>
+                        </SimpleGrid>
+
+                        <SimpleGrid mt="sm" cols={2}>
+                            <div>
+                                <NumberInput
+                                    label="預算下限"
+                                    defaultValue={1000}
+                                    withAsterisk
+                                    parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                                    formatter={(value) =>
+                                        !Number.isNaN(parseFloat(value))
+                                            ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                                            : '$ '
+                                    }
+                                    {...form.getInputProps('minPrice')}
+                                />
+                            </div>
+                            <div>
+                                <NumberInput
+                                    label="預算上限"
+                                    defaultValue={1000}
+                                    withAsterisk
+                                    parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                                    formatter={(value) =>
+                                        !Number.isNaN(parseFloat(value))
+                                            ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                                            : '$ '
+                                    }
+                                    {...form.getInputProps('maxPrice')}
+                                />
+                            </div>
+                        </SimpleGrid>
+
+                        <Title order={5} my="sm">聯絡方式</Title>
+
+                        <TextInput icon={<IconMail />} label="電子信箱"
+                            description="不影響登入用信箱，僅顯示在頁面上"
+                            placeholder="電子信箱"
+                            withAsterisk
+                            {...form.getInputProps('email')} />
+
+                        <TextInput icon={<IconPhone />} mt="sm" label="連絡電話" {...form.getInputProps('phone')} />
+
+                        <TextInput icon={<IconBrandFacebook />} mt="sm" label="Facebook"
+                            description="個人頁面連結"  {...form.getInputProps('facebook')} />
+
+                        <TextInput icon={<IconDeviceMobile />} mt="sm" label="Line ID" {...form.getInputProps('line')} />
+
+                        <Textarea
+                            mt="sm"
+                            placeholder="例如電話方便聯絡時間 or Email 來信主旨請填 or Message 來信請註明於 WeCoding 看見某案件"
+                            label="聯絡說明短述"
+                            minRows={5}
+                            {...form.getInputProps('desc')}
+                        />
+
+                        <Group position="center" mt="md">
+                            <Button size='md' type="submit" mt="sm" mb={32}
+                                loading={isSubmit}>
+                                送出
+                            </Button>
+                        </Group>
+                    </form>
+                </Box>
+            </Container>
+        </>
+    )
+}
+
+export default Post

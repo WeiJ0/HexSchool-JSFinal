@@ -19,6 +19,10 @@ const userAvatarUpload = axios.create({
     }
 })
 
+const postRequest = axios.create({
+    baseURL: 'http://localhost:3001/cases/'
+});
+
 userRequest.interceptors.response.use(
     config => {
         return config;
@@ -26,13 +30,15 @@ userRequest.interceptors.response.use(
     error => {
         if (error && error.response.status === 401) {
             showError('登入時效已過，請重新登入');
-            /* localStorage.removeItem('userInfo');
+            localStorage.removeItem('userInfo');
             window.location.href = '/';
-            return; */
+            return;
         }
         Promise.reject(error);
     }
 );
+
+//#region  User
 
 // 確認是否已註冊
 export const userEmailCheck = (email) => userRequest.post('/email', { email });
@@ -73,3 +79,11 @@ export const userEditContact = (data) => {
         userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return userRequest.post('/editContact', data)
 };
+
+//#endregion
+
+
+//#region Case
+// 新增案件
+
+//#endregion
