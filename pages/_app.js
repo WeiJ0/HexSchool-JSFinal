@@ -26,7 +26,7 @@ export default function App(props) {
 
       <Provider store={store}>
         <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
-          <NotificationsProvider>
+          <NotificationsProvider position='top-center'>
             <Layout>
               <Component {...pageProps} />
             </Layout>

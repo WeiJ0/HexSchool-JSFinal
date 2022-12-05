@@ -15,6 +15,8 @@ const initialUserInfo =
         nickname: '',
         token: '',
         avatar: '',
+        pwd: '',
+        createAt: ''
     };
 
 const userSlice = createSlice({
@@ -34,7 +36,13 @@ const userSlice = createSlice({
         },
         // 登入、修改
         update: (state, action) => {
-            state.user = action.payload;
+            console.log({ state })
+            console.log({ action })
+
+            for (let key in action.payload) {
+                console.log(key);
+                state.user[key] = action.payload[key]
+            }
             setLocalStorage(action.payload);
         },
         // 登出、清空

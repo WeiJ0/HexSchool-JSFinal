@@ -101,17 +101,60 @@ const EngineerForm = ({ type, setLoading }) => {
     ]
 
     const form = useForm({
-        initialValues: { email: '', phone: '', facebook: '', line: '', desc: '' },
+        initialValues: { service: '', languages: '', email: '', phone: '', facebook: '', line: '', desc: '' },
         validate: {
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         },
     });
+
+    const initForm = () => {
+        setLoading(true);
+        api.userGetContact({ type })
+            .then(res => {
+                setLoading(false);
+                const { email, serviceType, languages, phone, facebook, line, desc } = res.data.message;
+                form.setFieldValue('email', email);
+                form.setFieldValue('service', serviceType === 'r' ? 'remote' : 'office');
+                form.setFieldValue('languages', languages);
+                form.setFieldValue('phone', phone);
+                form.setFieldValue('facebook', facebook);
+                form.setFieldValue('line', line);
+                form.setFieldValue('desc', desc);
+            })
+    }
+
+    const submitForm = (value) => {
+        setSubmit(true);
+        api.userEditContact({
+            type,
+            content: value
+        })
+            .then(res => {
+                const { code, message } = res.data;
+                if (code === 0) {
+                    notify.showSuccess(message);
+                } else {
+                    notify.showError(message);
+                }
+                setSubmit(false);
+            })
+            .catch(err => {
+                notify.showError(err);
+                setSubmit(false);
+            })
+    }
+
+    useEffect(() => {
+        initForm();
+    }, [])
+
     return (
-        <form>
+        <form onSubmit={form.onSubmit((values) => submitForm(values))}>
             <Radio.Group
                 name="service"
                 label="服務方式"
                 withAsterisk
+                {...form.getInputProps('service')}
             >
                 <Radio value="remote" label="遠端作業" />
                 <Radio value="office" label="可到場作業" />
@@ -121,6 +164,7 @@ const EngineerForm = ({ type, setLoading }) => {
                 mt="sm"
                 data={languages}
                 label="擅長程式語言"
+                {...form.getInputProps('languages')}
             />
 
             <Divider my="md" />
@@ -160,7 +204,10 @@ const Contact = ({ type }) => {
     const pageData = [
         { title: '首頁', href: '/' },
         { title: '會員中心', href: '/User' },
-        { title: '發案方聯絡方式維護', href: '/Contact/Offerer' },
+        {
+            title: type === 'Offerer' ? '發案方聯絡方式維護' : '工程師聯絡方式維護',
+            href: type === 'Offerer' ? '/Contact/Offerer' : '/Contact/Engineer'
+        },
     ]
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
 import Image from 'next/image';
@@ -17,7 +17,7 @@ const UserTool = () => {
     return (
         <>
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
-                <Grid.Col span={6}>
+                <Grid.Col sm={12} lg={6}>
                     <Flex direction="column" align="center">
                         <Title order={5}>我是發案方</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
@@ -31,7 +31,7 @@ const UserTool = () => {
                         </Flex>
                     </Flex>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col sm={12} lg={6}>
                     <Flex direction="column" align="center">
                         <Title order={5}>我是工程師</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
@@ -52,8 +52,8 @@ const UserInfoEdit = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user.user);
     const [userAvatar, setUserAvatar] = useState('');
-    const [userNickname, setUserNickname] = useState(userInfo.userNickname);
-    const [userIntro, setUserIntro] = useState(userInfo.userIntro);
+    const [userNickname, setUserNickname] = useState(userInfo.nickname);
+    const [userIntro, setUserIntro] = useState(userInfo.intro);
 
     const updateIntro = () => {
         api.userEditInfo(userNickname, userIntro)
@@ -75,7 +75,7 @@ const UserInfoEdit = () => {
     const updateAvatar = (file) => {
         const formData = new FormData();
         formData.append('avatar', file);
-        formData.append('uid', userInfo.userId);
+        formData.append('uid', userInfo.id);
         formData.append('token', userInfo.token);
 
         api.userUploadAvatar(formData)
@@ -83,7 +83,7 @@ const UserInfoEdit = () => {
                 const { code, message } = res.data;
 
                 if (code === 0) {
-                    notify.showSuccess(message);
+                    notify.showSuccess('更換成功');
                     dispatch(userActions.update(message));
                 }
                 else
@@ -95,32 +95,33 @@ const UserInfoEdit = () => {
     }
 
 
-    useEffect(() => { }, [userInfo]);
     useEffect(() => {
-        setUserAvatar(userInfo.userAvatar);
-    }, []);
+        console.log(userInfo);
+        setUserAvatar(userInfo.avatar);
+    }, [userInfo]);
+
     return (
         <>
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
-                <Grid.Col span={5}>
+                <Grid.Col sm={12} lg={5}>
                     <Flex direction="column" align="center">
                         <img src={userAvatar || ''} alt="個人照片" width={200} height={200} style={{ objectFit: 'cover' }} />
                         <FileInput placeholder="上傳個人照片" color="custom-primary.1" size="md" variant="unstyled"
                             accept="image/png,image/jpeg" onChange={(e) => updateAvatar(e)} />
                     </Flex>
                 </Grid.Col>
-                <Grid.Col span={7}>
+                <Grid.Col sm={12} lg={7}>
                     <Box mt={40}>
                         <Grid gutter="sm" >
-                            <Grid.Col span={4}>暱稱</Grid.Col>
-                            <Grid.Col span={8}>
+                            <Grid.Col sm={12} lg={4}>暱稱</Grid.Col>
+                            <Grid.Col sm={12} lg={8}>
                                 <TextInput placeholder="Nickname" mb={30} value={userNickname}
                                     onChange={((e) => setUserNickname(e.target.value))} />
                             </Grid.Col>
                         </Grid>
                         <Grid gutter="sm">
-                            <Grid.Col span={4}>自我介紹 (200字內)</Grid.Col>
-                            <Grid.Col span={8}>
+                            <Grid.Col sm={12} lg={4}>自我介紹 (200字內)</Grid.Col>
+                            <Grid.Col sm={12} lg={8}>
                                 <Textarea
                                     label=""
                                     placeholder=""
@@ -152,25 +153,6 @@ const UserPage = () => {
         { title: '會員中心', href: '/User' },
     ]
 
-    const checkUserInfo = (uid, token) => {
-        api.userCheck({
-            userId: uid,
-            token
-        }).then(res => {
-            const { code, message } = res.data;
-
-            if (code != 0) {
-                notify.showError(message);
-                return;
-            }
-        }).catch(err => {
-            notify.showError('登入 Token 已過期，請重新登入');
-            dispatch(userActions.clear());
-            router.push('/');
-            return;
-        })
-    }
-
     const logout = () => {
         dispatch(userActions.clear());
         router.push('/');
@@ -178,8 +160,6 @@ const UserPage = () => {
 
     useEffect(() => {
         setUserInfo(userState);
-        checkUserInfo(userState.userId, userState.token);
-
     }, [userState]);
 
     return (
@@ -190,10 +170,10 @@ const UserPage = () => {
                         <PageBreadcrumb pageData={pageData} />
                     </Box>
                     <Box mb={60}>
-                        <Flex>
-                            <Title order={4} mr={32}>歡迎會員： {userInfo.userNickname} </Title>
+                        <Flex direction={{ base: 'column', md: 'row' }}>
+                            <Title order={4} mr={32}>歡迎會員： {userInfo.nickname} </Title>
                             <Box>
-                                <Button fw={400} variant="subtle">變更會員密碼</Button>
+                                <Button fw={400} pl={{ base: 0 }} variant="subtle">變更會員密碼</Button>
                                 <Button fw={400} variant="subtle" onClick={logout}>登出</Button>
                             </Box>
                         </Flex>

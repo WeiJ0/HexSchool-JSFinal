@@ -16,7 +16,9 @@ const Header = () => {
     const dispatch = useDispatch();
 
     // 抓取 state user id 判斷是否有登入
-    const isLogin = useSelector(state => state.user.user.userId);
+    const isLogin = useSelector(state => {
+        return state.user.user.id
+    });
 
     const [openMenu, setOpenMenu] = useState(false);
 
@@ -27,6 +29,14 @@ const Header = () => {
     const toUserPage = () => {
         if (router.route !== '/User')
             router.push('/User');
+    }
+
+    const clickNewPost = () => {
+        if (isLogin) {
+            if (router.route !== '/Post') router.push('/Post');
+        }
+        else
+            openUserModal();
     }
 
     const clickUserIcon = () => {
@@ -83,7 +93,8 @@ const Header = () => {
                                 <Flex justify="flex-start" align="center">
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找案件</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
-                                    <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>我要發案</Button>
+                                    <Button size='xl' color='custom-primary.1' onClick={clickNewPost}
+                                        variant="subtle" sx={navLinkStyle}>我要發案</Button>
                                     <Button size='xl' pr={0} variant="subtle" onClick={clickUserIcon} >
                                         <Image src={IconUser} alt="使用者" width={33} height={33} />
                                     </Button>

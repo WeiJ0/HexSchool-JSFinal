@@ -4,7 +4,9 @@ import { userActions } from '../../slices/userSlice';
 
 import { Modal, TextInput, PasswordInput, LoadingOverlay, Text, Button, Group, Box, Stepper } from '@mantine/core';
 import { useForm } from '@mantine/form';
+
 import * as api from "../../helpers/api";
+import * as notify from "../../helpers/notify";
 
 const InputEmail = () => {
     const dispatch = useDispatch();
@@ -50,7 +52,6 @@ const InputEmail = () => {
         api.userEmailCheck(email)
             .then((res) => {
                 const { code, message } = res.data;
-                console.log(code, message)
                 if (code === -1)
                     formCheck.setErrors({ email: message });
                 else if (code === 1) {
@@ -88,13 +89,12 @@ const InputEmail = () => {
                     if (code === -1)
                         formInput.setErrors({ password: message });
                     else if (code === 0) {
-                        // 登入成功
+                        notify.showSuccess('登入成功');
                         dispatch(userActions.update(message));
                         dispatch(userActions.closeModal());
                     }
                     setLoading(false);
                 }).catch((err) => {
-                    console.log(err);
                     formInput.setErrors({ password: err });
                     setLoading(false);
                 })
@@ -113,7 +113,7 @@ const InputEmail = () => {
                     if (code === -1)
                         formInput.setErrors({ nickname: message });
                     else {
-                        // 註冊成功
+                        notify.showSuccess('註冊成功');
                         dispatch(userActions.update(message));
                         dispatch(userActions.closeModal());
                     }

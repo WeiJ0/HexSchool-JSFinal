@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+import { showError } from './notify';
+
+
 const getToken = () => {
     return JSON.parse(localStorage.getItem('userInfo'))['token'];
 }
@@ -15,6 +18,21 @@ const userAvatarUpload = axios.create({
         'Content-Type': 'multipart/form-data'
     }
 })
+
+userRequest.interceptors.response.use(
+    config => {
+        return config;
+    },
+    error => {
+        if (error && error.response.status === 401) {
+            showError('登入時效已過，請重新登入');
+            /* localStorage.removeItem('userInfo');
+            window.location.href = '/';
+            return; */
+        }
+        Promise.reject(error);
+    }
+);
 
 // 確認是否已註冊
 export const userEmailCheck = (email) => userRequest.post('/email', { email });
