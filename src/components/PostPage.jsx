@@ -59,13 +59,23 @@ const Post = ({ isEdit }) => {
             .catch(err => { })
     }
 
-    const submitForm = () => {
+    const submitForm = (value) => {
         setSubmit(true);
 
         if (isEdit) {
 
         } else {
-
+            api.CaseAdd({
+                data: value
+            }).then(res => {
+                const { code, message } = res.data;
+                if (code === 0) {
+                    notify.showSuccess(message);
+                } else {
+                    notify.showError(message);
+                }
+                setSubmit(false);
+            })
         }
     }
 
@@ -84,7 +94,7 @@ const Post = ({ isEdit }) => {
                 </Box>
                 <Box mt={20} mb={60} w="50%" mx="auto">
 
-                    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                    <form onSubmit={form.onSubmit((values) => submitForm(values))}>
                         <TextInput
                             withAsterisk
                             label="案件標題"
@@ -182,18 +192,18 @@ const Post = ({ isEdit }) => {
                             {...form.getInputProps('phone')}
                         />
 
-                        <TextInput icon={<IconBrandFacebook />} 
-                            mt="sm" 
+                        <TextInput icon={<IconBrandFacebook />}
+                            mt="sm"
                             label="Facebook"
-                            description="個人頁面連結"  
+                            description="個人頁面連結"
                             {...form.getInputProps('facebook')}
                         />
 
-                        <TextInput 
-                            icon={<IconDeviceMobile />} 
+                        <TextInput
+                            icon={<IconDeviceMobile />}
                             mt="sm"
-                            label="Line ID" 
-                            {...form.getInputProps('line')} 
+                            label="Line ID"
+                            {...form.getInputProps('line')}
                         />
 
                         <Textarea
@@ -205,10 +215,10 @@ const Post = ({ isEdit }) => {
                         />
 
                         <Group position="center" mt="md">
-                            <Button 
-                                size='md' 
-                                type="submit" 
-                                mt="sm" 
+                            <Button
+                                size='md'
+                                type="submit"
+                                mt="sm"
                                 mb={32}
                                 loading={isSubmit}
                             >

@@ -67,7 +67,7 @@ const InputEmail = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                formCheck.setErrors({ email: err });
+                formCheck.setErrors({ email: err.message });
                 setLoading(false);
             })
     }

@@ -39,10 +39,10 @@ const userSlice = createSlice({
             console.log({ state })
             console.log({ action })
 
-            for (let key in action.payload) {
-                console.log(key);
+            for (let key in action.payload) {                
                 state.user[key] = action.payload[key]
             }
+            
             setLocalStorage(action.payload);
         },
         // 登出、清空
