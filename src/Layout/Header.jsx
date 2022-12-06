@@ -93,8 +93,7 @@ const Header = () => {
                                 <Flex justify="flex-start" align="center">
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找案件</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
-                                    <Button size='xl' color='custom-primary.1' onClick={clickNewPost}
-                                        variant="subtle" sx={navLinkStyle}>我要發案</Button>
+                                    <Button size='xl' color='custom-primary.1' onClick={clickNewPost} variant="subtle" sx={navLinkStyle}>我要發案</Button>
                                     <Button size='xl' pr={0} variant="subtle" onClick={clickUserIcon} >
                                         <Image src={IconUser} alt="使用者" width={33} height={33} />
                                     </Button>

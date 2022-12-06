@@ -21,13 +21,33 @@ const UserTool = () => {
                     <Flex direction="column" align="center">
                         <Title order={5}>我是發案方</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
-                            <Button leftIcon={<IconPhoneCalling size={20} />}
+                            <Button
+                                leftIcon={<IconPhoneCalling size={20} />}
                                 variant="outline" fw={400}
                                 fullWidth size="md" my={10}
-                                onClick={() => { router.push('/Contact/Offerer') }}
-                            >聯絡方式維護</Button>
-                            <Button leftIcon={<IconList size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>已發案件列表</Button>
-                            <Button leftIcon={<IconStar size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>收藏工程師列表</Button>
+                                onClick={() => { router.push('/Contact/Offerer') }}>
+                                聯絡方式維護
+                            </Button>
+
+                            <Button
+                                leftIcon={<IconList size={20} />}
+                                size="md"
+                                variant="outline"
+                                fw={400}
+                                fullWidth
+                                my={10}>
+                                已發案件列表
+                            </Button>
+
+                            <Button
+                                leftIcon={<IconStar size={20} />}
+                                variant="outline"
+                                fw={400}
+                                fullWidth
+                                size="md"
+                                my={10}>
+                                收藏工程師列表
+                            </Button>
                         </Flex>
                     </Flex>
                 </Grid.Col>
@@ -35,11 +55,36 @@ const UserTool = () => {
                     <Flex direction="column" align="center">
                         <Title order={5}>我是工程師</Title>
                         <Flex direction="column" align="center" mt={20} w={300}>
-                            <Button leftIcon={<IconPencil size={20} />}
-                                variant="outline" fw={400} fullWidth size="md" my={10}
-                                onClick={() => { router.push('/Contact/Engineer') }}>個人簡歷維護</Button>
-                            <Button leftIcon={<IconFile size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>作品集維護</Button>
-                            <Button leftIcon={<IconStar size={20} />} variant="outline" fw={400} fullWidth size="md" my={10}>收藏案件列表</Button>
+                            <Button
+                                fullWidth
+                                leftIcon={<IconPencil size={20} />}
+                                variant="outline"
+                                fw={400}
+                                my={10}
+                                size="md"
+                                onClick={() => { router.push('/Contact/Engineer') }}>
+                                個人簡歷維護
+                            </Button>
+
+                            <Button
+                                leftIcon={<IconFile size={20} />}
+                                variant="outline"
+                                fw={400}
+                                fullWidth
+                                size="md"
+                                my={10}>
+                                作品集維護
+                            </Button>
+
+                            <Button
+                                leftIcon={<IconStar size={20} />}
+                                variant="outline"
+                                fw={400}
+                                fullWidth
+                                size="md"
+                                my={10}>
+                                收藏案件列表
+                            </Button>
                         </Flex>
                     </Flex>
                 </Grid.Col>
@@ -96,7 +141,6 @@ const UserInfoEdit = () => {
 
 
     useEffect(() => {
-        console.log(userInfo);
         setUserAvatar(userInfo.avatar);
     }, [userInfo]);
 
@@ -106,8 +150,13 @@ const UserInfoEdit = () => {
                 <Grid.Col sm={12} lg={5}>
                     <Flex direction="column" align="center">
                         <img src={userAvatar || ''} alt="個人照片" width={200} height={200} style={{ objectFit: 'cover' }} />
-                        <FileInput placeholder="上傳個人照片" color="custom-primary.1" size="md" variant="unstyled"
-                            accept="image/png,image/jpeg" onChange={(e) => updateAvatar(e)} />
+                        <FileInput
+                            placeholder="上傳個人照片"
+                            color="custom-primary.1"
+                            size="md"
+                            variant="unstyled"
+                            accept="image/png,image/jpeg"
+                            onChange={(e) => updateAvatar(e)} />
                     </Flex>
                 </Grid.Col>
                 <Grid.Col sm={12} lg={7}>
@@ -115,7 +164,10 @@ const UserInfoEdit = () => {
                         <Grid gutter="sm" >
                             <Grid.Col sm={12} lg={4}>暱稱</Grid.Col>
                             <Grid.Col sm={12} lg={8}>
-                                <TextInput placeholder="Nickname" mb={30} value={userNickname}
+                                <TextInput 
+                                    placeholder="Nickname" 
+                                    mb={30} 
+                                    value={userNickname}
                                     onChange={((e) => setUserNickname(e.target.value))} />
                             </Grid.Col>
                         </Grid>

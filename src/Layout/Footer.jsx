@@ -10,7 +10,15 @@ const Footer = () => {
                     <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align="center" >
                         <Flex direction={{ base: 'column', md: 'row' }} align="center" >
                             <Image src={logo} alt="Logo" width={230} height={32} />
-                            <Text size={20} ml={{ base: 0, md: 20 }} mt={{ base: 14, md: 0 }} fw={500} color="custom-primary.1"> 威寇汀 程式外包媒合</Text>
+                            <Text 
+                                size={20} 
+                                ml={{ base: 0, md: 20 }} 
+                                mt={{ base: 14, md: 0 }} 
+                                fw={500} 
+                                color="custom-primary.1"
+                            > 
+                                威寇汀 程式外包媒合
+                            </Text>
                         </Flex>
                         <Divider size="md" color="#DFE4EB" />
                         <Flex align="center" mt={{ base: 48, md: 0 }} >

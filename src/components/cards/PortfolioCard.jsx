@@ -30,9 +30,7 @@ const PortfolioCard = () => {
                     </Flex>
                     <Flex align="center">
                         <ActionIcon size={20} variant="transparent" ref={ref} sx={likeStyle}>
-                            <IconHeart
-                                variant="filled"
-                                color={hovered ? 'F14A4A' : '#8A8A8B'} />
+                            <IconHeart variant="filled" color={hovered ? 'F14A4A' : '#8A8A8B'} />
                         </ActionIcon>
                         <Text color="#8A8A8B" fs={16} fw={400}>16</Text>
                     </Flex>

@@ -59,12 +59,12 @@ const Post = ({ isEdit }) => {
             .catch(err => { })
     }
 
-    const submitForm = () =>{
+    const submitForm = () => {
         setSubmit(true);
 
-        if(isEdit){
+        if (isEdit) {
 
-        }else{
+        } else {
 
         }
     }
@@ -85,25 +85,48 @@ const Post = ({ isEdit }) => {
                 <Box mt={20} mb={60} w="50%" mx="auto">
 
                     <form onSubmit={form.onSubmit((values) => console.log(values))}>
-                        <TextInput withAsterisk label="案件標題" placeholder='至多15字' {...form.getInputProps('title')} />
+                        <TextInput
+                            withAsterisk
+                            label="案件標題"
+                            placeholder='至多15字'
+                            {...form.getInputProps('title')}
+                        />
 
-                        <Textarea mt="sm" label="案件說明" minRows={5} placeholder='至多200字'
-                            withAsterisk {...form.getInputProps('content')} />
+                        <Textarea
+                            mt="sm"
+                            label="案件說明"
+                            minRows={5}
+                            placeholder='至多200字'
+                            withAsterisk
+                            {...form.getInputProps('content')}
+                        />
 
-                        <FileInput mt="sm" label="案件附件" description="限上傳圖檔或是 pdf，至多 5 個"
-                            placeholder='點擊選擇' multiple />
+                        <FileInput
+                            mt="sm"
+                            label="案件附件"
+                            description="限上傳圖檔或是 pdf，至多 5 個"
+                            placeholder='點擊選擇'
+                            multiple
+                        />
 
                         <SimpleGrid mt="sm" cols={2}>
                             <div>
-                                <DatePicker placeholder="最短需一天時間" label="預計完成時間"
-                                    icon={<IconCalendar size={16} />}
-                                    minDate={dayjs(new Date()).add(1, 'days').toDate()}
+                                <DatePicker
                                     withAsterisk
-                                    {...form.getInputProps('finishDate')} />
+                                    icon={<IconCalendar size={16} />}
+                                    label="預計完成時間"
+                                    placeholder="最短需一天時間"
+                                    minDate={dayjs(new Date()).add(1, 'days').toDate()}
+                                    {...form.getInputProps('finishDate')}
+                                />
                             </div>
                             <div>
-                                <Radio.Group name="serviceType" label="作業地點" withAsterisk
-                                    {...form.getInputProps('serviceType')} >
+                                <Radio.Group
+                                    withAsterisk
+                                    name="serviceType"
+                                    label="作業地點"
+                                    {...form.getInputProps('serviceType')}
+                                >
                                     <Radio value="remote" label="遠端作業" />
                                     <Radio value="office" label="進辦公室" />
                                 </Radio.Group>
@@ -143,18 +166,35 @@ const Post = ({ isEdit }) => {
 
                         <Title order={5} my="sm">聯絡方式</Title>
 
-                        <TextInput icon={<IconMail />} label="電子信箱"
+                        <TextInput
+                            withAsterisk
+                            icon={<IconMail />}
+                            label="電子信箱"
                             description="不影響登入用信箱，僅顯示在頁面上"
                             placeholder="電子信箱"
-                            withAsterisk
-                            {...form.getInputProps('email')} />
+                            {...form.getInputProps('email')}
+                        />
 
-                        <TextInput icon={<IconPhone />} mt="sm" label="連絡電話" {...form.getInputProps('phone')} />
+                        <TextInput
+                            icon={<IconPhone />}
+                            mt="sm"
+                            label="連絡電話"
+                            {...form.getInputProps('phone')}
+                        />
 
-                        <TextInput icon={<IconBrandFacebook />} mt="sm" label="Facebook"
-                            description="個人頁面連結"  {...form.getInputProps('facebook')} />
+                        <TextInput icon={<IconBrandFacebook />} 
+                            mt="sm" 
+                            label="Facebook"
+                            description="個人頁面連結"  
+                            {...form.getInputProps('facebook')}
+                        />
 
-                        <TextInput icon={<IconDeviceMobile />} mt="sm" label="Line ID" {...form.getInputProps('line')} />
+                        <TextInput 
+                            icon={<IconDeviceMobile />} 
+                            mt="sm"
+                            label="Line ID" 
+                            {...form.getInputProps('line')} 
+                        />
 
                         <Textarea
                             mt="sm"
@@ -165,8 +205,13 @@ const Post = ({ isEdit }) => {
                         />
 
                         <Group position="center" mt="md">
-                            <Button size='md' type="submit" mt="sm" mb={32}
-                                loading={isSubmit}>
+                            <Button 
+                                size='md' 
+                                type="submit" 
+                                mt="sm" 
+                                mb={32}
+                                loading={isSubmit}
+                            >
                                 送出
                             </Button>
                         </Group>
