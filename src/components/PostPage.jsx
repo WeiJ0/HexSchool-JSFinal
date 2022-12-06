@@ -9,8 +9,10 @@ import dayjs from 'dayjs';
 import PageBreadcrumb from './PageBreadcrumb';
 import * as notify from "../helpers/notify";
 import * as api from "../helpers/api";
+import { useRouter } from 'next/router';
 
 const Post = ({ isEdit }) => {
+    const router = useRouter();
     const [isLoading, setLoading] = useState(false);
     const [isSubmit, setSubmit] = useState(false);
 
@@ -33,15 +35,15 @@ const Post = ({ isEdit }) => {
             desc: ""
         },
         validate: {
-            title: (value) => (value.length > 0 ? null : '需要輸入標題'),
-            title: (value) => (value.length > 15 ? null : '標題需少於15字'),
-            content: (value) => (value.length > 0 ? null : '需要輸入內容'),
-            content: (value) => (value.length > 200 ? null : '內容須少於200字'),
+            title: (value) => (value.length == 0 ? '需要輸入標題' : null),
+            title: (value) => (value.length > 15 ? '標題需少於15字' : null),
+            content: (value) => (value.length == 0 ? '需要輸入內容' : null),
+            content: (value) => (value.length > 200 ? '內容須少於200字' : null),
             serviceType: (value) => (value ? null : '需要選擇服務'),
             finishDate: (value) => (value ? null : '需要選擇完成日期'),
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email格式錯誤'),
-            minPrice: (value) => (value > 0 ? null : '最低預算需大於0'),
-            maxPrice: (value) => (value ? null : '需要輸入預算上限'),
+            minPrice: (value) => (value <= 0 ? '最低預算需大於0' : null),
+            maxPrice: (value) => (value <= 0 ? '預算上限需大於0' : null),
         }
     });
 
@@ -69,12 +71,13 @@ const Post = ({ isEdit }) => {
                 data: value
             }).then(res => {
                 const { code, message } = res.data;
-                if (code === 0) {
-                    notify.showSuccess(message);
-                } else {
+                console.log(res.data);
+                if (code !== 0) {
                     notify.showError(message);
+                    setSubmit(false);
+                    return
                 }
-                setSubmit(false);
+                router.push(`/Post/${message}`);
             })
         }
     }
@@ -161,7 +164,7 @@ const Post = ({ isEdit }) => {
                             <div>
                                 <NumberInput
                                     label="預算上限"
-                                    defaultValue={1000}
+                                    defaultValue={3000}
                                     withAsterisk
                                     parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                                     formatter={(value) =>

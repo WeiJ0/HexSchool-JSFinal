@@ -89,6 +89,6 @@ export const CaseAdd = (data) => {
     const token = getToken();
     if (token)
         postRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    return postRequest.post('/add', data);
+    return postRequest.post('/', data);
 };
 //#endregion
