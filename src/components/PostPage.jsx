@@ -32,7 +32,9 @@ const Post = ({ isEdit }) => {
             phone: "",
             facebook: "",
             line: "",
-            desc: ""
+            desc: "",
+            minPrice: 1000,
+            maxPrice: 3000
         },
         validate: {
             title: (value) => (value.length == 0 ? '需要輸入標題' : null),
@@ -77,6 +79,7 @@ const Post = ({ isEdit }) => {
                     setSubmit(false);
                     return
                 }
+                setSubmit(false);
                 router.push(`/Post/${message}`);
             })
         }
