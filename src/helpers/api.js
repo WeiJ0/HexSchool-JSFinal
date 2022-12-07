@@ -84,11 +84,14 @@ export const userEditContact = (data) => {
 
 
 //#region Case
+// 取得案件資訊
+export const CaseGet = (id) => postRequest.get(`/?id=${id}`);
+
 // 新增案件
 export const CaseAdd = (data) => {
     const token = getToken();
     if (token)
         postRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    return postRequest.post('/add', data);
+    return postRequest.post('/', data);
 };
 //#endregion
