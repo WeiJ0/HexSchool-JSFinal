@@ -34,17 +34,20 @@ const Post = ({ isEdit }) => {
             phone: "",
             facebook: "",
             line: "",
-            desc: ""
+            desc: "",
+            minPrice: 1000,
+            maxPrice: 3000
         },
         validate: {
-            title: (value) => (value.length > 0 ? null : '需要輸入標題'),
-            title: (value) => (value.length < 30 ? null : '標題需少於15字'),
-            content: (value) => (value.length > 0 ? null : '需要輸入內容'),
+            title: (value) => (value.length == 0 ? '需要輸入標題' : null),
+            title: (value) => (value.length > 15 ? '標題需少於15字' : null),
+            content: (value) => (value.length == 0 ? '需要輸入內容' : null),
+            content: (value) => (value.length > 200 ? '內容須少於200字' : null),
             serviceType: (value) => (value ? null : '需要選擇服務'),
             finishDate: (value) => (value ? null : '需要選擇完成日期'),
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email格式錯誤'),
-            minPrice: (value) => { console.log(value); (!value ? null : '最低預算需大於0') },
-            maxPrice: (value) => { console.log(value); (!value ? null : '需要輸入預算上限') },
+            minPrice: (value) => (value <= 0 ? '最低預算需大於0' : null),
+            maxPrice: (value) => (value <= 0 ? '預算上限需大於0' : null),
         }
     });
 
@@ -75,16 +78,14 @@ const Post = ({ isEdit }) => {
                 data
             }).then(res => {
                 const { code, message } = res.data;
+                console.log(res.data);
                 if (code !== 0) {
                     notify.showError(message);
                     setSubmit(false);
-                    return;
+                    return
                 }
                 setSubmit(false);
-
-                setTimeout(() => {
-                    router.push(`/Case/${message}`);
-                }, 1000);
+                router.push(`/Post/${message}`);
             })
         }
     }
@@ -171,6 +172,7 @@ const Post = ({ isEdit }) => {
                             <div>
                                 <NumberInput
                                     label="預算上限"
+                                    defaultValue={3000}
                                     withAsterisk
                                     parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                                     formatter={(value) =>
