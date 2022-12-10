@@ -46,6 +46,10 @@ const Header = () => {
             openUserModal();
     }
 
+    const clickCaseList = () => {
+        if (router.route !== '/Case') router.push('/Case');
+    }
+
     const navLinkStyle = {
         padding: '0 10px',
         margin: '0 14px',
@@ -86,12 +90,13 @@ const Header = () => {
             <Box py={20} bg={'#e8f7fe'}>
                 <Container size="xl">
                     <Flex justify="space-between" align="center">
-                        <Image src={logo} alt="Logo" width={230} height={32} />
+                        <Image src={logo} alt="Logo" style={{ cursor: 'pointer' }} width={230} height={32}
+                            onClick={() => router.push('/')} />
 
                         <MediaQuery smallerThan="xs" styles={{ display: 'none' }}>
                             <nav>
                                 <Flex justify="flex-start" align="center">
-                                    <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找案件</Button>
+                                    <Button size='xl' color='custom-primary.1' onClick={clickCaseList} variant="subtle" sx={navLinkStyle}>找案件</Button>
                                     <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
                                     <Button size='xl' color='custom-primary.1' onClick={clickNewPost} variant="subtle" sx={navLinkStyle}>我要發案</Button>
                                     <Button size='xl' pr={0} variant="subtle" onClick={clickUserIcon} >

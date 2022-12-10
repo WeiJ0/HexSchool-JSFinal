@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import dayjs from 'dayjs';
 
 import PageBreadcrumb from './PageBreadcrumb';
-import Editor from './editor';
 
 import * as notify from "../helpers/notify";
 import * as api from "../helpers/api";
@@ -40,9 +39,9 @@ const Post = ({ isEdit }) => {
         },
         validate: {
             title: (value) => (value.length == 0 ? '需要輸入標題' : null),
-            title: (value) => (value.length > 15 ? '標題需少於15字' : null),
+            title: (value) => (value.length > 30 ? '標題需少於30字' : null),
             content: (value) => (value.length == 0 ? '需要輸入內容' : null),
-            content: (value) => (value.length > 200 ? '內容須少於200字' : null),
+            content: (value) => (value.length > 500 ? '內容須少於500字' : null),
             serviceType: (value) => (value ? null : '需要選擇服務'),
             finishDate: (value) => (value ? null : '需要選擇完成日期'),
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email格式錯誤'),
@@ -51,6 +50,28 @@ const Post = ({ isEdit }) => {
         }
     });
 
+    // 從案件編號取得原本資料
+    const initCase = () => {
+        api.CaseGet(id).then((res) => {
+            const { code, message } = res.data;
+            const { title, content, serviceType, finishDate, files, email, phone, facebook, line, desc, minPrice, maxPrice } = message;
+
+            form.setFieldValue('title', title);
+            form.setFieldValue('content', content);
+            form.setFieldValue('serviceType', serviceType);
+            form.setFieldValue('finishDate', finishDate);
+            form.setFieldValue('files', files);
+            form.setFieldValue('email', email);
+            form.setFieldValue('phone', phone);
+            form.setFieldValue('facebook', facebook);
+            form.setFieldValue('line', line);
+            form.setFieldValue('desc', desc);
+            form.setFieldValue('minPrice', minPrice);
+            form.setFieldValue('maxPrice', maxPrice);
+        })
+    }
+
+    // 取得已儲存的聯絡資訊
     const initContact = () => {
         api.userGetContact({ type: "offerer" })
             .then(res => {
@@ -69,6 +90,7 @@ const Post = ({ isEdit }) => {
 
         setSubmit(true);
         let data = value;
+        // 取代 \n 為 <br/> 才可以在前端顯示
         data.content = data.content.replaceAll('\n', '<br/>')
 
         if (isEdit) {
@@ -85,13 +107,18 @@ const Post = ({ isEdit }) => {
                     return
                 }
                 setSubmit(false);
-                router.push(`/Post/${message}`);
+                router.push(`/Case/${message}`);
             })
         }
     }
 
     const initForm = () => {
-        initContact();
+        // 如果是編輯案件，帶入案件資料
+        if (isEdit)
+            initCase();
+        // 如果是發案，帶入聯絡資訊
+        else
+            initContact();
     }
 
     useEffect(() => { initForm() }, []);
@@ -109,7 +136,7 @@ const Post = ({ isEdit }) => {
                         <TextInput
                             withAsterisk
                             label="案件標題"
-                            placeholder='至多15字'
+                            placeholder='至多30字'
                             {...form.getInputProps('title')}
                         />
 
@@ -117,7 +144,7 @@ const Post = ({ isEdit }) => {
                             mt="sm"
                             label="案件說明"
                             minRows={5}
-                            placeholder='至多200字'
+                            placeholder='至多500字'
                             withAsterisk
                             {...form.getInputProps('content')}
                         />

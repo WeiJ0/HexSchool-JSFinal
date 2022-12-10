@@ -84,6 +84,18 @@ export const userEditContact = (data) => {
 
 
 //#region Case
+
+// 取得案件列表
+export const CaseList = (cnt = 8, page = 1, query = '', status = '', type = '') => {
+    let url = `/all?cnt=${cnt}&page=${page}`;
+    if (query)
+        url += `&query=${query}`;
+    if (type)
+        url += `&type=${type}`;
+
+    return postRequest.get(url);
+};
+
 // 取得案件資訊
 export const CaseGet = (id) => postRequest.get(`/?id=${id}`);
 

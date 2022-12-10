@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { MediaQuery, Container, Grid, Divider, Box, BackgroundImage, Title, Flex, Button } from "@mantine/core";
 import { Carousel } from '@mantine/carousel';
 import { IconFileText, IconMoodSmile } from '@tabler/icons';
 import { useViewportSize } from '@mantine/hooks';
+
+import * as api from "../helpers/api"
+import * as notify from "../helpers/notify"
 
 import CaseCard from "./cards/CaseCard";
 import HomeCarousel from "./HomeCarousel";
@@ -81,6 +85,29 @@ const NewCases = ({ width, height }) => {
     }
     const titleSize = width > 768 ? "h2" : "h4";
 
+    const router = useRouter();
+    const [cases, setCases] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const getCases = () => {
+        api.CaseList()
+            .then(res => {
+                const { code, message } = res.data;
+
+                if (code !== 0) {
+                    notify.showError(message)
+                    return;
+                }
+
+                setCases(message);
+                setLoading(false);
+            })
+    };
+
+    useEffect(() => {
+        getCases();
+    }, []);
+
     return (
         <>
             <Box mt={48}>
@@ -89,24 +116,29 @@ const NewCases = ({ width, height }) => {
                         <>
                             <Flex justify="space-between" align="center">
                                 <Title order={2} size={titleSize.title} color="#1E1E1E">最新案件</Title>
-                                <Button variant="subtle" sx={moreLinkStyle}>查看更多 &gt;</Button>
+                                <Button
+                                    variant="subtle"
+                                    sx={moreLinkStyle}
+                                    onClick={() => { router.push('/Case') }}
+                                >查看更多 &gt;</Button>
                             </Flex>
                         </>
                         <>
                             <MediaQuery smallerThan="xs" styles={{ display: 'none' }}>
                                 <Grid gutter={20} mt={20}>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
-                                    <Grid.Col span={3}><CaseCard /></Grid.Col>
+                                    {
+                                        cases.map((item, index) => {
+                                            return (
+                                                <Grid.Col span={3} key={index}>
+                                                    <CaseCard data={item} />
+                                                </Grid.Col>
+                                            )
+                                        })
+                                    }
                                 </Grid>
                             </MediaQuery>
 
-                            <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
+                            {/* <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
                                 <Carousel
                                     mt={24}
                                     sx={{ maxWidth: "100%" }}
@@ -121,7 +153,7 @@ const NewCases = ({ width, height }) => {
                                     <Carousel.Slide><CaseCard /></Carousel.Slide>
                                     <Carousel.Slide><CaseCard /></Carousel.Slide>
                                 </Carousel>
-                            </MediaQuery>
+                            </MediaQuery> */}
                         </>
                     </Box>
                 </Container>
