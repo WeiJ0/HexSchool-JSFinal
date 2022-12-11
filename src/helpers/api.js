@@ -96,6 +96,20 @@ export const CaseList = (cnt = 8, page = 1, query = '', status = '', type = '') 
     return postRequest.get(url);
 };
 
+export const CaseListByUser = (cnt = 8, page = 1, query = '', status = '', type = '') => {
+    let url = `/all?cnt=${cnt}&page=${page}`;
+    if (query)
+        url += `&query=${query}`;
+    if (type)
+        url += `&type=${type}`;
+
+    const token = getToken();
+    if (token)
+        postRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return postRequest.get(url);
+}
+
 // 取得案件資訊
 export const CaseGet = (id) => postRequest.get(`/?id=${id}`);
 
@@ -105,5 +119,13 @@ export const CaseAdd = (data) => {
     if (token)
         postRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return postRequest.post('/', data);
+};
+
+// 編輯案件 
+export const CaseEdit = (id, data) => {
+    const token = getToken();
+    if (token)
+        postRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return postRequest.patch(`/${id}`, data);
 };
 //#endregion

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from 'react-redux';
 import { userActions } from '../slices/userSlice';
 import { Box, Flex, Input, Button, Container, Title, Grid, SegmentedControl, Text, LoadingOverlay } from '@mantine/core';
+import { useDocumentTitle, randomId } from '@mantine/hooks';
 import { IconSearch, IconPlus, IconListDetails, IconStar } from '@tabler/icons';
 import * as api from "../helpers/api"
 import * as notify from "../helpers/notify"
@@ -10,17 +11,45 @@ import { addCommasToNumber } from "../helpers/number";
 
 
 const CaseToolbar = ({ userId }) => {
+    const router = useRouter();
+    const { page, query, status, type } = router.query;
+    const [uid, setUid] = useState('');
+    const [searchText, setSearchText] = useState(query || '');
+
+    useEffect(() => {
+        setUid(userId);
+    }, [userId]);
+
     return (
         <>
             <Flex justify={'space-between'}>
                 <Box>
                     <Flex>
-                        <Input placeholder="案件關鍵字" w={200} mr="sm" />
-                        <Button bg="custom-primary.1" leftIcon={<IconSearch />}>搜尋</Button>
+                        <Input
+                            mr="sm"
+                            w={200}
+                            placeholder="案件關鍵字"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                        />
+                        <Button
+                            bg="custom-primary.1"
+                            leftIcon={<IconSearch />}
+                            onClick={() => router.push(`/Case/?query=${searchText}`)}
+                        >
+                            搜尋
+                        </Button>
                     </Flex>
                 </Box>
 
-                {userId && <Button bg="custom-primary.1" leftIcon={<IconPlus />}>我要發案</Button>}
+                {uid &&
+                    <Button
+                        bg="custom-primary.1"
+                        leftIcon={<IconPlus />}
+                        onClick={() => router.push('/Post')}
+                    >
+                        我要發案
+                    </Button>}
             </Flex>
 
             <Box mt={24}>
@@ -43,7 +72,6 @@ const CaseToolbar = ({ userId }) => {
 }
 
 const itemStyle = {
-    cursor: 'pointer',
     border: '1px solid #E5E5E5',
     "&:hover": {
         transform: "translateY(-2px)",
@@ -55,7 +83,7 @@ const CaseItem = ({ data, userId, clickEvent }) => {
 
     return (
         <>
-            <Box py={16} px={32} sx={itemStyle} onClick={() => clickEvent(id)}>
+            <Box py={16} px={32} sx={itemStyle}>
                 <Flex justify="space-between" align="center">
                     <Title order={5}>{title}</Title>
                     {status === 'N' && <Text color="custom.green.1">已找到工程師</Text>}
@@ -67,7 +95,15 @@ const CaseItem = ({ data, userId, clickEvent }) => {
                     <Text color="custom-primary.1" c="red" mr="sm">{addCommasToNumber(minPrice)} - {addCommasToNumber(maxPrice)}</Text>
 
                     <Flex>
-                        <Button size="sm" variant="outline" mr={8} leftIcon={<IconListDetails />}>詳細內容</Button>
+                        <Button
+                            mr={8}
+                            size="sm"
+                            variant="outline"
+                            leftIcon={<IconListDetails />}
+                            onClick={() => clickEvent(id)}
+                        >
+                            詳細內容
+                        </Button>
                         {userId && <Button size="sm" variant="outline" leftIcon={<IconStar />}>收藏</Button>}
                     </Flex>
                 </Flex>
@@ -79,6 +115,9 @@ const CaseItem = ({ data, userId, clickEvent }) => {
 const CaseList = () => {
     const router = useRouter();
     const { page, query, status, type } = router.query
+
+    const [title, setTitle] = useState('案件列表 - WeCoding');
+    useDocumentTitle(title);
 
     const [cases, setCases] = useState([]);
     const [isLoading, setLoading] = useState(false);
@@ -108,7 +147,11 @@ const CaseList = () => {
 
     useEffect(() => {
         getCases();
-    }, [])
+
+        if (query)
+            setTitle(`案件查詢 ${query} - WeCoding`);
+
+    }, [router.query])
 
     return (
         <>

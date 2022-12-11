@@ -16,6 +16,7 @@ const Post = ({ isEdit }) => {
     const [isLoading, setLoading] = useState(false);
     const [isSubmit, setSubmit] = useState(false);
     const router = useRouter();
+    const { id } = router.query;
 
     const pageData = [
         { title: '首頁', href: '/' },
@@ -94,7 +95,17 @@ const Post = ({ isEdit }) => {
         data.content = data.content.replaceAll('\n', '<br/>')
 
         if (isEdit) {
-
+            api.CaseEdit(id, { data })
+                .then(res => {
+                    const { code, message } = res.data;
+                    if (code !== 0) {
+                        notify.showError(message);
+                        setSubmit(false);
+                        return
+                    }
+                    setSubmit(false);
+                    router.push(`/Case/${id}`);
+                })
         } else {
             api.CaseAdd({
                 data
@@ -114,7 +125,7 @@ const Post = ({ isEdit }) => {
 
     const initForm = () => {
         // 如果是編輯案件，帶入案件資料
-        if (isEdit)
+        if (isEdit && id)
             initCase();
         // 如果是發案，帶入聯絡資訊
         else
@@ -122,6 +133,7 @@ const Post = ({ isEdit }) => {
     }
 
     useEffect(() => { initForm() }, []);
+    useEffect(() => { initForm() }, [id]);
 
     return (
         <>

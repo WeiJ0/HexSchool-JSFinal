@@ -18,6 +18,7 @@ import rightBracketsImg from "../assets/right-brackets.png";
 
 
 const Banner = ({ height, width }) => {
+    const router = useRouter();
     const BannerSrc = width > 768 ? BannerImg.src : BannerMbImg.src;
     const BannerRadius = width > 768 ? "md" : "";
     const copyWriting = {
@@ -63,7 +64,15 @@ const Banner = ({ height, width }) => {
                         <Title order={1} size={copyWriting.titleSize} color="white" mb={{ base: 16, md: 24 }}>{copyWriting.title}</Title>
                         <Title order={2} size={copyWriting.subtitleSize} fw={400} color="white" mb={{ base: 40, md: 48 }}>{copyWriting.subtitle}</Title>
                         <Flex align="center">
-                            <Button sx={bannerBtnsStyle} leftIcon={<IconFileText size={20} />} size="lg" bg="custom-primary.1">找案件</Button>
+                            <Button
+                                sx={bannerBtnsStyle}
+                                leftIcon={<IconFileText size={20} />}
+                                size="lg"
+                                bg="custom-primary.1"
+                                onClick={() => { router.push("/Case") }}
+                            >
+                                找案件
+                            </Button>
                             <Button sx={bannerBtnsStyle} leftIcon={<IconMoodSmile size={20} />} size="lg" bg="custom-primary.1" ml={36}>找工程師</Button>
                         </Flex>
                     </Flex>

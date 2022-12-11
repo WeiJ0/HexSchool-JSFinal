@@ -35,7 +35,9 @@ const UserTool = () => {
                                 variant="outline"
                                 fw={400}
                                 fullWidth
-                                my={10}>
+                                my={10}
+                                onClick={() => { router.push('/Case/Owner') }}
+                            >
                                 已發案件列表
                             </Button>
 
@@ -164,9 +166,9 @@ const UserInfoEdit = () => {
                         <Grid gutter="sm" >
                             <Grid.Col sm={12} lg={4}>暱稱</Grid.Col>
                             <Grid.Col sm={12} lg={8}>
-                                <TextInput 
-                                    placeholder="Nickname" 
-                                    mb={30} 
+                                <TextInput
+                                    placeholder="Nickname"
+                                    mb={30}
                                     value={userNickname}
                                     onChange={((e) => setUserNickname(e.target.value))} />
                             </Grid.Col>
