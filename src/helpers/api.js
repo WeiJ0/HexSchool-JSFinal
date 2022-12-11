@@ -7,9 +7,9 @@ const getToken = () => {
     return JSON.parse(localStorage.getItem('userInfo'))['token'];
 }
 
-const URL = 'https://wecoding-express-weij0.vercel.app';
-/* const URL = 'http://localhost:3001';
- */
+/* const URL = 'https://wecoding-express-weij0.vercel.app'; */
+const URL = 'http://localhost:3001';
+
 const userRequest = axios.create({
     baseURL: `${URL}/users/`
 });
@@ -24,6 +24,10 @@ const userAvatarUpload = axios.create({
 const postRequest = axios.create({
     baseURL: `${URL}/cases/`
 });
+
+const collectRequest = axios.create({
+    baseURL: `${URL}/collect/`
+})
 
 userRequest.interceptors.response.use(
     config => {
@@ -56,7 +60,12 @@ export const userCheck = (data) => {
     return userRequest.post('/check', data);
 }
 // 變更暱稱及簡介
-export const userEditInfo = (data) => userRequest.post('/updateInfo', data);
+export const userEditInfo = (data) => {
+    const token = getToken();
+    if (token)
+        userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return userRequest.post('/updateInfo', data)
+};
 // 上傳大頭照
 export const userUploadAvatar = (formData) => {
 
@@ -131,3 +140,13 @@ export const CaseEdit = (id, data) => {
     return postRequest.patch(`/${id}`, data);
 };
 //#endregion
+
+//#region Collect
+
+// 收藏
+export const CollectAdd = (id) => {
+    const token = getToken();
+    if (token)
+        collectRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return collectRequest.post(`/${id}`);
+};

@@ -78,7 +78,7 @@ const itemStyle = {
     }
 }
 
-const CaseItem = ({ data, userId, clickEvent }) => {
+const CaseItem = ({ data, userId, clickEvent, collectEvent }) => {
     const { id, title, content, status, serviceType, minPrice, maxPrice } = data;
 
     return (
@@ -104,7 +104,15 @@ const CaseItem = ({ data, userId, clickEvent }) => {
                         >
                             詳細內容
                         </Button>
-                        {userId && <Button size="sm" variant="outline" leftIcon={<IconStar />}>收藏</Button>}
+                        {userId &&
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                leftIcon={<IconStar />}
+                                onClick={() => collectEvent(id)}
+                            >
+                                收藏
+                            </Button>}
                     </Flex>
                 </Flex>
             </Box>
@@ -128,6 +136,20 @@ const CaseList = () => {
 
     const toDetail = (id) => {
         router.push(`/Case/${id}`)
+    }
+
+    const collectCase = (id) => {
+        api.CollectAdd(id)
+            .then(res => {
+                const { code, message } = res.data;
+
+                if (code !== 0) {
+                    notify.showError(message)
+                    return;
+                }
+
+                notify.showSuccess('成功收藏');
+            })
     }
 
     const getCases = () => {
@@ -171,6 +193,7 @@ const CaseList = () => {
                                                     data={item}
                                                     userId={isLogin}
                                                     clickEvent={toDetail}
+                                                    collectEvent={collectCase}
                                                 />
                                             </Grid.Col>
                                         )

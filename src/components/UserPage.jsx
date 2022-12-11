@@ -1,16 +1,16 @@
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
-import Image from 'next/image';
 
-import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex, Avatar } from '@mantine/core';
-import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile, IconCheck, IconX } from '@tabler/icons';
+import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex } from '@mantine/core';
+import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile } from '@tabler/icons';
 import { userActions } from '../slices/userSlice';
 
 import PageBreadcrumb from './PageBreadcrumb';
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
+import defalutAvatar from '../assets/default-avatary.jpg';
 
 const UserTool = () => {
     const router = useRouter();
@@ -98,17 +98,18 @@ const UserTool = () => {
 const UserInfoEdit = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user.user);
+    
     const [userAvatar, setUserAvatar] = useState('');
     const [userNickname, setUserNickname] = useState(userInfo.nickname);
     const [userIntro, setUserIntro] = useState(userInfo.intro);
 
     const updateIntro = () => {
-        api.userEditInfo(userNickname, userIntro)
+        api.userEditInfo({ nickname: userNickname, intro: userIntro })
             .then(res => {
                 const { code, message } = res.data;
 
-                if (code === 1) {
-                    notify.showSuccess(message);
+                if (code === 0) {
+                    notify.showSuccess('更新成功');                    
                     dispatch(userActions.update(message));
                 }
                 else
@@ -144,6 +145,7 @@ const UserInfoEdit = () => {
 
     useEffect(() => {
         setUserAvatar(userInfo.avatar);
+        console.log('change')
     }, [userInfo]);
 
     return (
@@ -151,7 +153,7 @@ const UserInfoEdit = () => {
             <Grid w="95%" mx="auto" gutter="sm" mt={40}>
                 <Grid.Col sm={12} lg={5}>
                     <Flex direction="column" align="center">
-                        <img src={userAvatar || ''} alt="個人照片" width={200} height={200} style={{ objectFit: 'cover' }} />
+                        <img src={userAvatar || defalutAvatar.src} alt="個人照片" width={200} height={200} style={{ objectFit: 'cover' }} />
                         <FileInput
                             placeholder="上傳個人照片"
                             color="custom-primary.1"
@@ -162,7 +164,7 @@ const UserInfoEdit = () => {
                     </Flex>
                 </Grid.Col>
                 <Grid.Col sm={12} lg={7}>
-                    <Box mt={40}>
+                    <Box mt={16}>
                         <Grid gutter="sm" >
                             <Grid.Col sm={12} lg={4}>暱稱</Grid.Col>
                             <Grid.Col sm={12} lg={8}>
