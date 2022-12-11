@@ -7,20 +7,22 @@ const getToken = () => {
     return JSON.parse(localStorage.getItem('userInfo'))['token'];
 }
 
+const URL = 'https://wecoding-express-weij0.vercel.app';
+/* const URL = 'http://localhost:3001';
+ */
 const userRequest = axios.create({
-    /* baseURL: 'https://weij0-app.herokuapp.com/users/' */
-    baseURL: 'http://localhost:3001/users/'
+    baseURL: `${URL}/users/`
 });
 
 const userAvatarUpload = axios.create({
-    baseURL: 'http://localhost:3001/users/uploadAvatar',
+    baseURL: `${URL}/users/uploadAvatar`,
     headers: {
         'Content-Type': 'multipart/form-data'
     }
 })
 
 const postRequest = axios.create({
-    baseURL: 'http://localhost:3001/cases/'
+    baseURL: `${URL}/cases/`
 });
 
 userRequest.interceptors.response.use(
@@ -54,7 +56,7 @@ export const userCheck = (data) => {
     return userRequest.post('/check', data);
 }
 // 變更暱稱及簡介
-export const userEditInfo = (data) => userRequest.post('/editInfo', data);
+export const userEditInfo = (data) => userRequest.post('/updateInfo', data);
 // 上傳大頭照
 export const userUploadAvatar = (formData) => {
 
