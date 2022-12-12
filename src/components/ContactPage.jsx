@@ -37,12 +37,13 @@ const OffererForm = ({ type, setLoading }) => {
         setSubmit(true);
         api.userEditContact({
             type,
-            content: value
+            contact: value
         })
             .then(res => {
                 const { code, message } = res.data;
                 if (code === 0) {
-                    notify.showSuccess(message);
+                    notify.showSuccess('修改成功');
+                    initForm();
                 } else {
                     notify.showError(message);
                 }
@@ -101,9 +102,9 @@ const EngineerForm = ({ type, setLoading }) => {
     ]
 
     const form = useForm({
-        initialValues: { service: '', languages: '', email: '', phone: '', facebook: '', line: '', desc: '' },
+        initialValues: { serviceType: '', languages: '', email: '', phone: '', facebook: '', line: '', desc: '' },
         validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : '信箱格式錯誤'),
         },
     });
 
@@ -114,7 +115,7 @@ const EngineerForm = ({ type, setLoading }) => {
                 setLoading(false);
                 const { email, serviceType, languages, phone, facebook, line, desc } = res.data.message;
                 form.setFieldValue('email', email);
-                form.setFieldValue('service', serviceType === 'r' ? 'remote' : 'office');
+                form.setFieldValue('serviceType', serviceType === 'remote' ? 'remote' : 'office');
                 form.setFieldValue('languages', languages);
                 form.setFieldValue('phone', phone);
                 form.setFieldValue('facebook', facebook);
@@ -127,12 +128,13 @@ const EngineerForm = ({ type, setLoading }) => {
         setSubmit(true);
         api.userEditContact({
             type,
-            content: value
+            contact: value
         })
             .then(res => {
                 const { code, message } = res.data;
                 if (code === 0) {
-                    notify.showSuccess(message);
+                    notify.showSuccess('修改成功');
+                    initForm();
                 } else {
                     notify.showError(message);
                 }
@@ -151,10 +153,10 @@ const EngineerForm = ({ type, setLoading }) => {
     return (
         <form onSubmit={form.onSubmit((values) => submitForm(values))}>
             <Radio.Group
-                name="service"
+                name="serviceType"
                 label="服務方式"
                 withAsterisk
-                {...form.getInputProps('service')}
+                {...form.getInputProps('serviceType')}
             >
                 <Radio value="remote" label="遠端作業" />
                 <Radio value="office" label="可到場作業" />

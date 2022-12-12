@@ -88,7 +88,7 @@ export const userEditContact = (data) => {
     const token = getToken();
     if (token)
         userRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    return userRequest.post('/editContact', data)
+    return userRequest.post('/updateContact', data)
 };
 
 //#endregion
