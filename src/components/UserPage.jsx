@@ -74,7 +74,8 @@ const UserTool = () => {
                                 fw={400}
                                 fullWidth
                                 size="md"
-                                my={10}>
+                                my={10}
+                                onClick={() => { router.push('/Profile/Edit') }}>
                                 作品集維護
                             </Button>
 
@@ -98,7 +99,7 @@ const UserTool = () => {
 const UserInfoEdit = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user.user);
-    
+
     const [userAvatar, setUserAvatar] = useState('');
     const [userNickname, setUserNickname] = useState(userInfo.nickname);
     const [userIntro, setUserIntro] = useState(userInfo.intro);
@@ -109,7 +110,7 @@ const UserInfoEdit = () => {
                 const { code, message } = res.data;
 
                 if (code === 0) {
-                    notify.showSuccess('更新成功');                    
+                    notify.showSuccess('更新成功');
                     dispatch(userActions.update(message));
                 }
                 else
