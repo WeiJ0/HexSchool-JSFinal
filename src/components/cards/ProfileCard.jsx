@@ -9,12 +9,12 @@ const ImageDisplay = ({ images }) => {
         <>
             {
                 images.length > 1 ?
-                    <Carousel sx={{ maxWidth: 320 }} mx="auto" withIndicators height={300}>
+                    <Carousel sx={{ maxWidth: 320 }} mx="auto" bg="custom.second.1" withIndicators height={300}>
                         {
                             images.map((image, index) => {
                                 return (
                                     <Carousel.Slide key={index}>
-                                        <img src={image} height="300" width="100%" style={{ objectFit: 'cover' }} />
+                                        <img src={image} height="300" width="100%" style={{ objectFit: 'contain' }} />
                                     </Carousel.Slide>
                                 )
                             })
@@ -58,7 +58,7 @@ const ProfileCard = ({ data }) => {
 
     return (
         <>
-            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle}>
+            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle} onClick={toDetail(id)}>
 
                 <Card.Section>
                     <ImageDisplay images={files} />

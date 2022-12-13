@@ -160,6 +160,8 @@ export const CollectAdd = (id) => {
 
 //#region Profile
 
+export const profileGet = (id) => profileRequest.get(`/?id=${id}`);
+
 export const profileList = (cnt = 8, page = 1, query = '') => {
     let url = `/all?cnt=${cnt}&page=${page}`;
     if (query)

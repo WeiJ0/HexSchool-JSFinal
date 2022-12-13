@@ -1,13 +1,14 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import { useSelector } from "react-redux"
 import { useForm } from "@mantine/form"
-import { Box, Container, MultiSelect, TextInput, Textarea, FileInput, Button, LoadingOverlay, Group } from "@mantine/core"
+import { Box, Text, Image, Container, MultiSelect, TextInput, Textarea, FileInput, Button, LoadingOverlay, Group } from "@mantine/core"
+import { Carousel } from '@mantine/carousel';
 import { IconUpload } from '@tabler/icons';
 
 import PageBreadcrumb from "./PageBreadcrumb"
 import * as api from "../helpers/api";
-import { useEffect } from "react"
+import * as notify from "../helpers/notify";
 
 const ProfileEdit = () => {
     const router = useRouter()
@@ -16,6 +17,7 @@ const ProfileEdit = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
+    const [images, setImages] = useState([]);
 
     const pageData = [
         { title: '首頁', href: '/' },
@@ -69,7 +71,34 @@ const ProfileEdit = () => {
             });
     }
 
-    useEffect(() => [], [userInfo]);
+    const initForm = () => {
+        api.profileGet(id)
+            .then((res) => {
+                const { code, message } = res.data;
+
+                if (code === 0) {
+                    form.setValues({
+                        title: message.title,
+                        content: message.content,
+                        languages: message.languages.split(','),
+                    });
+
+                    setImages(message.files);
+                }
+                else
+                    notify.showError(message);
+            })
+            .catch((err) => {
+                notify.showError(err.message);
+            })
+    }
+
+    useEffect(() => {
+        if (id)
+            initForm();
+    }, [id])
+
+    useEffect(() => { }, [userInfo]);
 
     return (
         <>
@@ -84,7 +113,7 @@ const ProfileEdit = () => {
                         <TextInput
                             withAsterisk
                             name="title"
-                            label="案件標題"
+                            label="作品集標題"
                             placeholder='至多30字'
                             {...form.getInputProps('title')}
                         />
@@ -92,7 +121,7 @@ const ProfileEdit = () => {
                         <Textarea
                             mt="sm"
                             name="content"
-                            label="案件說明"
+                            label="作品集說明"
                             minRows={5}
                             placeholder='至多500字'
                             withAsterisk
@@ -114,6 +143,25 @@ const ProfileEdit = () => {
                             }}
                             {...form.getInputProps('languages')}
                         />
+
+                        {
+                            (id && images.length > 0) ?
+                                <>
+                                    <Carousel mt="md" slideSize="33.333333%" slideGap="md">
+                                        {
+                                            images.map((item, index) => {
+                                                return (
+                                                    <Carousel.Slide key={index}>
+                                                        <Image src={item} style={{ objectFit: 'contain' }} withPlaceholder />
+                                                    </Carousel.Slide>
+                                                )
+                                            })
+                                        }
+                                    </Carousel>
+                                    <Text mt="md" align="center">目前已上傳 {images.length} 圖片</Text>
+                                </> :
+                                ""
+                        }
 
                         <FileInput
                             mt="sm"
