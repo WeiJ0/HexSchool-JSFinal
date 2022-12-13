@@ -50,6 +50,10 @@ const Header = () => {
         if (router.route !== '/Case') router.push('/Case');
     }
 
+    const clickProfileList = () => {
+        if (router.route !== '/Profile') router.push('/Profile');
+    }
+
     const navLinkStyle = {
         padding: '0 10px',
         margin: '0 14px',
@@ -97,7 +101,7 @@ const Header = () => {
                             <nav>
                                 <Flex justify="flex-start" align="center">
                                     <Button size='xl' color='custom-primary.1' onClick={clickCaseList} variant="subtle" sx={navLinkStyle}>找案件</Button>
-                                    <Button size='xl' color='custom-primary.1' variant="subtle" sx={navLinkStyle}>找工程師</Button>
+                                    <Button size='xl' color='custom-primary.1' onClick={clickProfileList} variant="subtle" sx={navLinkStyle}>找工程師</Button>
                                     <Button size='xl' color='custom-primary.1' onClick={clickNewPost} variant="subtle" sx={navLinkStyle}>我要發案</Button>
                                     <Button size='xl' pr={0} variant="subtle" onClick={clickUserIcon} >
                                         <Image src={IconUser} alt="使用者" width={33} height={33} />

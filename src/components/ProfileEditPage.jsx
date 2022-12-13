@@ -1,14 +1,18 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
+import { useSelector } from "react-redux"
 import { useForm } from "@mantine/form"
 import { Box, Container, MultiSelect, TextInput, Textarea, FileInput, Button, LoadingOverlay, Group } from "@mantine/core"
 import { IconUpload } from '@tabler/icons';
 
 import PageBreadcrumb from "./PageBreadcrumb"
+import * as api from "../helpers/api";
+import { useEffect } from "react"
 
-const ProfileEdit = ({ isEdit }) => {
+const ProfileEdit = () => {
     const router = useRouter()
     const { id } = router.query
+    const userInfo = useSelector(state => state.user.user);
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
@@ -40,9 +44,32 @@ const ProfileEdit = ({ isEdit }) => {
     ]);
 
     const submitForm = (values) => {
-        console.log(values);
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('content', values.content);
+        formData.append('languages', values.languages);
+
+        values.files.forEach((file) => {
+            formData.append('files', file);
+        })
+
+        formData.append('uid', userInfo.id);
+        formData.append('token', userInfo.token);
+
+        api.profileAdd(formData)
+            .then((res) => {
+                const { code, message } = res.data;
+
+                if (code === 0) {
+                    notify.showSuccess('新增成功');
+                    router.push('/profile');
+                }
+                else
+                    notify.showError(message);
+            });
     }
 
+    useEffect(() => [], [userInfo]);
 
     return (
         <>

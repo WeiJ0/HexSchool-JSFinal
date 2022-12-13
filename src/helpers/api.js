@@ -28,6 +28,15 @@ const postRequest = axios.create({
 const collectRequest = axios.create({
     baseURL: `${URL}/collect/`
 })
+const profileRequest = axios.create({
+    baseURL: `${URL}/profiles/`
+})
+const profileUpload = axios.create({
+    baseURL: `${URL}/profiles/`,
+    headers: {
+        'Content-Type': 'multipart/form-data'
+    }
+})
 
 userRequest.interceptors.response.use(
     config => {
@@ -68,7 +77,6 @@ export const userEditInfo = (data) => {
 };
 // 上傳大頭照
 export const userUploadAvatar = (formData) => {
-
     const token = formData.get('token');
     formData.delete('token');
 
@@ -92,7 +100,6 @@ export const userEditContact = (data) => {
 };
 
 //#endregion
-
 
 //#region Case
 
@@ -142,7 +149,6 @@ export const CaseEdit = (id, data) => {
 //#endregion
 
 //#region Collect
-
 // 收藏
 export const CollectAdd = (id) => {
     const token = getToken();
@@ -150,3 +156,31 @@ export const CollectAdd = (id) => {
         collectRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return collectRequest.post(`/${id}`);
 };
+//#endregion
+
+//#region Profile
+
+export const profileList = (cnt = 8, page = 1, query = '') => {
+    let url = `/all?cnt=${cnt}&page=${page}`;
+    if (query)
+        url += `&query=${query}`;
+
+    return profileRequest.get(url);
+};
+
+export const profileAdd = (formData) => {
+    const token = formData.get('token');
+    formData.delete('token');
+    profileUpload.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return profileUpload.post('/', formData);
+};
+
+export const profileEdit = (formData) => {
+    const id = formData.get('id');
+    formData.delete('id');
+    const token = formData.get('token');
+    formData.delete('token');
+    profileUpload.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return profileUpload.patch(`/${id}`, formData);
+};
+//#endregion
