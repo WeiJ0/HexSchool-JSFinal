@@ -58,7 +58,7 @@ const ProfileCard = ({ data }) => {
 
     return (
         <>
-            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle} onClick={toDetail(id)}>
+            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle} onClick={() => toDetail(id)}>
 
                 <Card.Section>
                     <ImageDisplay images={files} />

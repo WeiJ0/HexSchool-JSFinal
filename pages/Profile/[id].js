@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import ProfileEditPage from "../../src/components/ProfileEditPage";
+import ProfilePage from "../../src/components/ProfilePage";
 
 const Profile = () => {
     const router = useRouter();
@@ -7,7 +7,7 @@ const Profile = () => {
 
     return (
         <>
-            <ProfileEditPage id={id} />
+            <ProfilePage id={id} />
         </>
     )
 }

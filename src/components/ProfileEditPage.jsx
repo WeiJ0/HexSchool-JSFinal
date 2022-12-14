@@ -77,6 +77,12 @@ const ProfileEdit = () => {
                 const { code, message } = res.data;
 
                 if (code === 0) {
+
+                    // 非本人不可編輯
+                    if (message.uid !== userInfo.id) {
+                        router.push('/');
+                    }
+
                     form.setValues({
                         title: message.title,
                         content: message.content,
