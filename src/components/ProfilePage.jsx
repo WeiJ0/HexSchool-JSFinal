@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-
-import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay } from "@mantine/core"
+import { useSelector } from "react-redux";
+import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay, ActionIcon } from "@mantine/core"
 import { Carousel } from '@mantine/carousel';
+import { IconStar } from '@tabler/icons';
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
@@ -11,7 +12,7 @@ const ContactSide = ({ data }) => {
     const { serviceType, email, phone, facebook, line, desc } = Contact_Engineer[0];
     return (
         <>
-            <Flex justify="center">
+            <Flex justify="center" mt={16}>
                 <Avatar size="xl" src={avatar} />
             </Flex>
             <Text mt="md" align="center">{nickname}</Text>
@@ -65,7 +66,7 @@ const LanguageBadges = ({ languages }) => {
 }
 
 const ProfilePage = ({ id }) => {
-
+    const userState = useSelector(state => state.user.user);
     const [profile, setProfile] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -89,12 +90,35 @@ const ProfilePage = ({ id }) => {
             });
     };
 
+    const isCollect = () => {
+        if (!userState)
+            return false;
+        else {
+            return profile.collect.map(item => item.userId === userState.id).includes(true);
+        }
+    }
+
+    const collect = () => {
+        api.Collect('profile', id)
+            .then((res) => {
+                const { code, message } = res.data;
+                if (code === 0)
+                    getProfile();
+                else
+                    notify.showError(message)
+            })
+            .catch((err) => {
+                notify.showError(err.message);
+            })
+    }
+
     useEffect(() => {
         if (id)
             getProfile();
     }, [id])
 
     useEffect(() => { }, [profile])
+    useEffect(() => { }, [userState])
 
     return (
         <>
@@ -104,12 +128,23 @@ const ProfilePage = ({ id }) => {
                 </Box>
                 <Box mt={20} mb={60}>
                     {isLoaded &&
-                        <Grid gutter={20}>
+                        <Grid gutter={36}>
                             <Grid.Col span={9}>
                                 <ProfileImages images={profile.files} />
                                 <Box px={16}>
-                                    <Flex justify="space-between">
+                                    <Flex justify="space-between" align="center">
                                         <Text size={24} mt="md">{profile.title}</Text>
+                                        <Flex align="center">
+                                            <ActionIcon>
+                                                <IconStar
+                                                    strokeWidth={0}
+                                                    variant="transparent" size={24}
+                                                    fill={isCollect() ? '#F14A4A' : '#8A8A8B'}
+                                                    onClick={collect}
+                                                />
+                                            </ActionIcon>
+                                            <Text size={18}>{profile.collect.length}</Text>
+                                        </Flex>
                                     </Flex>
                                     <Box mt="md">
                                         <LanguageBadges languages={profile.languages.split(',')} />

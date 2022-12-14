@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import { showError } from './notify';
 
-
 const getToken = () => {
     return JSON.parse(localStorage.getItem('userInfo'))['token'];
 }
@@ -38,7 +37,7 @@ const profileUpload = axios.create({
     }
 })
 
-userRequest.interceptors.response.use(
+userRequest.interceptors.request.use(
     config => {
         return config;
     },
@@ -51,7 +50,50 @@ userRequest.interceptors.response.use(
         }
         Promise.reject(error);
     }
-);
+)
+postRequest.interceptors.request.use(
+    config => {
+        return config;
+    },
+    error => {
+        if (error && error.response.status === 401) {
+            showError('登入時效已過，請重新登入');
+            localStorage.removeItem('userInfo');
+            window.location.href = '/';
+            return;
+        }
+        Promise.reject(error);
+    }
+)
+collectRequest.interceptors.request.use(
+    config => {
+        return config;
+    },
+    error => {
+        if (error && error.response.status === 401) {
+            showError('登入時效已過，請重新登入');
+            localStorage.removeItem('userInfo');
+            window.location.href = '/';
+            return;
+        }
+        Promise.reject(error);
+    }
+)
+profileRequest.interceptors.request.use(
+    config => {
+        return config;
+    },
+    error => {
+        if (error && error.response.status === 401) {
+            showError('登入時效已過，請重新登入');
+            localStorage.removeItem('userInfo');
+            window.location.href = '/';
+            return;
+        }
+        Promise.reject(error);
+    }
+)
+
 
 //#region  User
 
@@ -150,11 +192,12 @@ export const CaseEdit = (id, data) => {
 
 //#region Collect
 // 收藏
-export const CollectAdd = (id) => {
+export const Collect = (type, id) => {
     const token = getToken();
     if (token)
         collectRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    return collectRequest.post(`/${id}`);
+
+    return collectRequest.post(`/${type}/${id}`);
 };
 //#endregion
 

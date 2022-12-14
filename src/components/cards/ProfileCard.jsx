@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Card, Divider, Avatar, Title, Box, Text, Badge, Button, Group } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
-import { IconBrandPython, IconStar } from '@tabler/icons';
+import { IconListDetails, IconStar } from '@tabler/icons';
 import defalutAvatar from '../../assets/default-avatary.jpg';
 
 const ImageDisplay = ({ images }) => {
@@ -9,7 +9,7 @@ const ImageDisplay = ({ images }) => {
         <>
             {
                 images.length > 1 ?
-                    <Carousel sx={{ maxWidth: 320 }} mx="auto" bg="custom.second.1" withIndicators height={300}>
+                    <Carousel sx={{ maxWidth: 320 }} mx="auto" bg="custom.second.1" withIndicators height={250}>
                         {
                             images.map((image, index) => {
                                 return (
@@ -58,7 +58,7 @@ const ProfileCard = ({ data }) => {
 
     return (
         <>
-            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle} onClick={() => toDetail(id)}>
+            <Card shadow="lg" p={20} radius="md" w={{ base: 300, md: "100%" }} sx={cardStyle}>
 
                 <Card.Section>
                     <ImageDisplay images={files} />
@@ -77,7 +77,14 @@ const ProfileCard = ({ data }) => {
                     <Title order={5} size={16} lineClamp={1} w="100%" sx={{ flex: 3 }}>{title}</Title>
                 </Box>
 
-                <Group position="right">
+                <Group mt="lg" position="right">
+                    <Button
+                        leftIcon={<IconListDetails size={18} />}
+                        onClick={() => toDetail(id)}
+                        bg="custom-primary.1"
+                    >
+                        詳細內容
+                    </Button>
                     <Button
                         leftIcon={<IconStar size={18} />}
                         bg="custom-primary.1"
