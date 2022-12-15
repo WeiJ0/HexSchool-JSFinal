@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router'
 
-import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex } from '@mantine/core';
+import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Flex, LoadingOverlay } from '@mantine/core';
 import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile } from '@tabler/icons';
 import { userActions } from '../slices/userSlice';
 
@@ -96,7 +96,7 @@ const UserTool = () => {
     )
 }
 
-const UserInfoEdit = () => {
+const UserInfoEdit = ({ setIsLoading }) => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user.user);
 
@@ -105,6 +105,7 @@ const UserInfoEdit = () => {
     const [userIntro, setUserIntro] = useState(userInfo.intro);
 
     const updateIntro = () => {
+        setIsLoading(true);
         api.userEditInfo({ nickname: userNickname, intro: userIntro })
             .then(res => {
                 const { code, message } = res.data;
@@ -115,13 +116,17 @@ const UserInfoEdit = () => {
                 }
                 else
                     notify.showError(message);
+
+                setIsLoading(false);
             })
             .catch(err => {
                 notify.showError(err.message);
+                setIsLoading(false);
             })
     }
 
     const updateAvatar = (file) => {
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('avatar', file);
         formData.append('uid', userInfo.id);
@@ -137,9 +142,12 @@ const UserInfoEdit = () => {
                 }
                 else
                     notify.showError(message);
+
+                setIsLoading(false);
             })
             .catch(err => {
                 notify.showError(err.message);
+                setIsLoading(false);
             })
     }
 
@@ -204,6 +212,7 @@ const UserPage = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const userState = useSelector(state => state.user.user);
+    const [isLoading, setIsLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({});
     const pageData = [
         { title: '首頁', href: '/' },
@@ -223,6 +232,7 @@ const UserPage = () => {
         <>
             <Box>
                 <Container size="xl">
+                    <LoadingOverlay visible={isLoading} overlayBlur={2} />
                     <Box mt={40} mb={60}>
                         <PageBreadcrumb pageData={pageData} />
                     </Box>
@@ -234,7 +244,7 @@ const UserPage = () => {
                                 <Button fw={400} variant="subtle" onClick={logout}>登出</Button>
                             </Box>
                         </Flex>
-                        <UserInfoEdit />
+                        <UserInfoEdit setIsLoading={setIsLoading} />
                     </Box>
                     <Box mb={60}>
                         <UserTool />

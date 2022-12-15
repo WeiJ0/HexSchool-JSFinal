@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay, ActionIcon } from "@mantine/core"
+import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay, ActionIcon, Tooltip, CopyButton } from "@mantine/core"
+import { IconStar, IconMailForward, IconCopy, IconCheck, IconPhoneCall } from '@tabler/icons';
 import { Carousel } from '@mantine/carousel';
-import { IconStar } from '@tabler/icons';
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
@@ -16,21 +16,69 @@ const ContactSide = ({ data }) => {
                 <Avatar size="xl" src={avatar} />
             </Flex>
             <Text mt="md" align="center">{nickname}</Text>
-            <Text mt="md" align="center">{intro}</Text>
+            <Text mt="md" align="center" color="gray">{intro}</Text>
 
             <Text mt="md" size={18}>聯絡方式</Text>
 
             <Grid p={16}>
                 <Grid.Col span={4}>電子郵件</Grid.Col>
-                <Grid.Col span={8}>{email}</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {email}
+                    </Text>
+                    <ActionIcon ml={8} onClick={(e) => {
+                        e.preventDefault();
+                        window.open(`mailto:${email}?subject=我是從WeCoding網站上看到您的聯絡資訊，我想要聯絡您。`)
+                    }}>
+                        <IconMailForward size={36} />
+                    </ActionIcon>
+                </Grid.Col>
                 <Grid.Col span={4}>連絡電話</Grid.Col>
-                <Grid.Col span={8}>{phone}</Grid.Col>
-                <Grid.Col span={4}>Line ID</Grid.Col>
-                <Grid.Col span={8}>{line}</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {phone}
+                    </Text>
+                    <ActionIcon ml={8} onClick={(e) => {
+                        e.preventDefault();
+                        window.open(`tel:${phone}`)
+                    }}>
+                        <IconPhoneCall size={36} />
+                    </ActionIcon>
+                </Grid.Col>
+                <Grid.Col span={4} color="gray">Facebook</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {facebook}
+                    </Text>
+                    <CopyButton ml={8} value={facebook}>
+                        {({ copied, copy }) => (
+                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
+                    </CopyButton>
+                </Grid.Col>
+                <Grid.Col span={4} color="gray">Line ID</Grid.Col>
+                <Grid.Col size={14} span={8}>
+                    <Text color="gray">
+                        {line}
+                    </Text>
+                    <CopyButton ml={8} value={line}>
+                        {({ copied, copy }) => (
+                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
+                    </CopyButton>
+                </Grid.Col>
             </Grid>
 
-            <Text mt="md" size={18}>聯絡方式</Text>
-            <Text mt="sm" p={16}>{desc}</Text>
+            <Text mt="md" size={18}>聯絡說明</Text>
+            <Text mt="sm" p={16} color="gray">{desc}</Text>
         </>
     )
 }
@@ -132,9 +180,9 @@ const ProfilePage = ({ id }) => {
                             <Grid.Col span={9}>
                                 <ProfileImages images={profile.files} />
                                 <Box px={16}>
-                                    <Flex justify="space-between" align="center">
-                                        <Text size={24} mt="md">{profile.title}</Text>
-                                        <Flex align="center">
+                                    <Flex justify="space-between" align="center" mt="md">
+                                        <Text size={24}>{profile.title}</Text>
+                                        <Flex align="center" mr={16}>
                                             <ActionIcon>
                                                 <IconStar
                                                     strokeWidth={0}

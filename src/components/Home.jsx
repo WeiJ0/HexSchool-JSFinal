@@ -11,7 +11,7 @@ import * as notify from "../helpers/notify"
 import CaseCard from "./cards/CaseCard";
 import HomeCarousel from "./HomeCarousel";
 
-import BannerImg from "../assets/home-banner.png";
+import BannerImg from "../assets/home-banner.jpg";
 import BannerMbImg from "../assets/home-banner-mobile.png";
 import leftBracketsImg from "../assets/left-brackets.png";
 import rightBracketsImg from "../assets/right-brackets.png";
