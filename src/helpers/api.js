@@ -37,62 +37,25 @@ const profileUpload = axios.create({
     }
 })
 
-userRequest.interceptors.request.use(
-    config => {
-        return config;
-    },
-    error => {
-        if (error && error.response.status === 401) {
-            showError('登入時效已過，請重新登入');
-            localStorage.removeItem('userInfo');
-            window.location.href = '/';
-            return;
+const requests = [userRequest, postRequest, collectRequest, profileRequest];
+
+requests.forEach(request => {
+    request.interceptors.response.use(
+        config => {
+            return config;
+        },
+        error => {
+            console.log(error);
+            if (error && error.response.status === 401) {
+                showError('登入時效已過，請重新登入');
+                localStorage.removeItem('userInfo');
+                window.location.href = '/';
+                return;
+            }
+            Promise.reject(error);
         }
-        Promise.reject(error);
-    }
-)
-postRequest.interceptors.request.use(
-    config => {
-        return config;
-    },
-    error => {
-        if (error && error.response.status === 401) {
-            showError('登入時效已過，請重新登入');
-            localStorage.removeItem('userInfo');
-            window.location.href = '/';
-            return;
-        }
-        Promise.reject(error);
-    }
-)
-collectRequest.interceptors.request.use(
-    config => {
-        return config;
-    },
-    error => {
-        if (error && error.response.status === 401) {
-            showError('登入時效已過，請重新登入');
-            localStorage.removeItem('userInfo');
-            window.location.href = '/';
-            return;
-        }
-        Promise.reject(error);
-    }
-)
-profileRequest.interceptors.request.use(
-    config => {
-        return config;
-    },
-    error => {
-        if (error && error.response.status === 401) {
-            showError('登入時效已過，請重新登入');
-            localStorage.removeItem('userInfo');
-            window.location.href = '/';
-            return;
-        }
-        Promise.reject(error);
-    }
-)
+    )
+})
 
 
 //#region  User
