@@ -16,9 +16,7 @@ const CaseList = () => {
     const [cases, setCases] = useState([]);
     const [isLoading, setLoading] = useState(false);
 
-    const isLogin = useSelector(state => {
-        return state.user.user.id
-    });
+    const userInfo = useSelector(state => state.user.user);
 
     const pageData = [
         { title: '首頁', href: '/' },
@@ -34,6 +32,11 @@ const CaseList = () => {
         api.CaseListByUser(8, 1, query, status, type)
             .then(res => {
                 const { code, message } = res.data;
+
+                if (code === -2) {
+                    setLoading(false);
+                    return;
+                }
 
                 if (code !== 0) {
                     notify.showError(message)
@@ -89,7 +92,16 @@ const CaseList = () => {
                                         <th>編輯</th>
                                     </tr>
                                 </thead>
-                                <tbody>{caseRows}</tbody>
+                                <tbody>
+                                    {cases.length == 0 ?
+                                        <tr>
+                                            <td colSpan="4" style={{ textAlign: 'center' }}>
+                                                <Text fw="bold" color="red" py={24}>尚未新增任何案件</Text>
+                                            </td>
+                                        </tr> :
+                                        caseRows
+                                    }
+                                </tbody>
                             </Table>
                         </Box>
                     </Box>

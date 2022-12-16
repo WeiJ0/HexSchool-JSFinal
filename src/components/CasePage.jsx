@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Container, Box, Title, Flex, Divider, Text, CopyButton, SimpleGrid, ActionIcon, Tooltip, Button } from "@mantine/core";
+import { Container, Box, Title, Flex, Divider, Text, CopyButton, SimpleGrid, ActionIcon, Tooltip, Skeleton } from "@mantine/core";
 import { useDocumentTitle } from '@mantine/hooks';
-import { IconMailForward, IconCopy, IconCheck } from '@tabler/icons';
+import { IconMailForward, IconPhoneCall, IconCopy, IconCheck } from '@tabler/icons';
 import * as api from "../helpers/api";
 import { formatDate } from "../helpers/date";
+import { addCommasToNumber } from "../helpers/number";
 
 const CasePage = ({ id }) => {
     const router = useRouter();
-    const [caseInfo, setCaseInfo] = useState({
-        title: ''
-    });
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [caseInfo, setCaseInfo] = useState({});
     useDocumentTitle(caseInfo.title + ' - WeCoding');
 
     const initCaseInfo = () => {
@@ -22,9 +22,11 @@ const CasePage = ({ id }) => {
                 return;
             }
             setCaseInfo(message);
+            setIsLoaded(true);
         })
     }
 
+    // 案件狀態顯示
     const statusText = (status) => {
         if (status === "Y")
             return <Text size={16} color="red">尚未找到工程師</Text>
@@ -37,9 +39,7 @@ const CasePage = ({ id }) => {
             initCaseInfo();
     }, [id]);
 
-    useEffect(() => {
-
-    }, [caseInfo]);
+    useEffect(() => {}, [caseInfo]);
 
     return (
         <>
@@ -47,33 +47,62 @@ const CasePage = ({ id }) => {
                 <Container size="xl">
                     <Box w="70%" mx="auto">
                         <Flex px={32} align="center">
-                            <Title order={4}>{caseInfo.title}</Title>
-                            <Text ml={16}>發布於 {formatDate(caseInfo.createAt, 'YYYY-MM-DD HH:mm:ss')}</Text>
-                            <Title ml="auto" order={4}>{statusText(caseInfo.status)}</Title>
+                            {
+                                isLoaded ?
+                                    <>
+                                        <Title order={4}>{caseInfo.title}</Title>
+                                        <Text ml={16}>發布於 {formatDate(caseInfo.createAt, 'YYYY-MM-DD HH:mm:ss')}</Text>
+                                        <Title ml="auto" order={4}>{statusText(caseInfo.status)}</Title>
+                                    </> :
+                                    <Skeleton height={16} mt={6} radius="xl" />
+                            }
+
                         </Flex>
 
-                        <Divider />
+                        <Divider mt={8} />
 
                         <Box px={32} mt={24}>
                             <Title order={5}>案件說明</Title>
                             <Box mt={16} px={32}>
-                                <div dangerouslySetInnerHTML={{ __html: caseInfo.content }} />
+                                {
+                                    isLoaded ?
+                                        <><div dangerouslySetInnerHTML={{ __html: caseInfo.content }} /></> :
+                                        <Skeleton height={16} mt={6} radius="xl" />
+                                }
                             </Box>
                         </Box>
 
                         <Box px={32} mt={16}>
                             <Title order={5}>預估完成時間</Title>
-                            <Text mt={16} px={32}>{formatDate(caseInfo.createAt, 'YYYY-MM-DD')}</Text>
+                            <Text mt={16} px={32}>
+                                {
+                                    isLoaded ?
+                                        formatDate(caseInfo.createAt, 'YYYY-MM-DD') :
+                                        <Skeleton height={16} mt={6} radius="xl" />
+                                }
+                            </Text>
                         </Box>
 
                         <Box px={32} mt={16}>
                             <Title order={5}>作業地點</Title>
-                            <Text mt={16} px={32}>{caseInfo.serviceType === 'R' ? '可遠端' : '需到現場作業'}</Text>
+                            <Text mt={16} px={32}>
+                                {
+                                    isLoaded ?
+                                        caseInfo.serviceType === 'R' ? '可遠端' : '需到現場作業' :
+                                        <Skeleton height={16} mt={6} radius="xl" />
+                                }
+                            </Text>
                         </Box>
 
                         <Box px={32} mt={16}>
-                            <Title order={5}>案件說明</Title>
-                            <Text mt={16} px={32}>{caseInfo.desc}</Text>
+                            <Title order={5}>預算</Title>
+                            <Text mt={16} px={32}>
+                                {
+                                    isLoaded ?
+                                        `${addCommasToNumber(caseInfo.minPrice)} - ${addCommasToNumber(caseInfo.maxPrice)}` :
+                                        <Skeleton height={16} mt={6} radius="xl" />
+                                }
+                            </Text>
                         </Box>
 
                         <Box px={32} mt={16} w="50%">
@@ -82,49 +111,76 @@ const CasePage = ({ id }) => {
                             <SimpleGrid mt={16} px={32} cols={2} spacing="xl">
                                 <div>電子郵件</div>
                                 <Flex>
-                                    {caseInfo.email}
-                                    <ActionIcon>
-                                        <IconMailForward size={36} />
-                                    </ActionIcon>
+                                    {
+                                        isLoaded ?
+                                            <>
+                                                {caseInfo.email}
+                                                <ActionIcon ml={8} onClick={() => window.open(`mailto:${caseInfo.email}`)}>
+                                                    <IconMailForward size={36} />
+                                                </ActionIcon>
+                                            </> :
+                                            <Skeleton height={16} mt={6} radius="xl" />
+                                    }
                                 </Flex>
                             </SimpleGrid>
 
                             <SimpleGrid mt={16} px={32} cols={2} spacing="xl">
                                 <div>連絡電話</div>
                                 <Flex>
-                                    {caseInfo.phone}
-                                    <CopyButton value={caseInfo.phone}>
-                                        {({ copied, copy }) => (
-                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                    {
+                                        isLoaded ?
+                                            <>
+                                                {caseInfo.phone}
+                                                <ActionIcon ml={8} onClick={() => window.open(`tel:${caseInfo.phone}`)}>
+                                                    <IconPhoneCall size={36} />
                                                 </ActionIcon>
-                                            </Tooltip>
-                                        )}
-                                    </CopyButton>
+                                            </> :
+                                            <Skeleton height={16} mt={6} radius="xl" />
+                                    }
                                 </Flex>
                             </SimpleGrid>
 
                             <SimpleGrid mt={16} px={32} cols={2} spacing="xl">
                                 <div>Facebook</div>
                                 <Flex>
-                                    <a href={caseInfo.facebook}>{caseInfo.facebook}</a>
+                                    {
+                                        isLoaded ?
+                                            <a href={caseInfo.facebook}>{caseInfo.facebook}</a> :
+                                            <Skeleton height={16} mt={6} radius="xl" />
+                                    }
                                 </Flex>
                             </SimpleGrid>
 
                             <SimpleGrid mt={16} px={32} cols={2} spacing="xl">
                                 <div>Line</div>
                                 <Flex>
-                                    {caseInfo.line}
-                                    <CopyButton value={caseInfo.line}>
-                                        {({ copied, copy }) => (
-                                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        )}
-                                    </CopyButton>
+                                    {
+                                        isLoaded ?
+                                            <>
+                                                {caseInfo.line}
+                                                <CopyButton ml={8} value={caseInfo.line}>
+                                                    {({ copied, copy }) => (
+                                                        <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                                            <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                                                {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                                            </ActionIcon>
+                                                        </Tooltip>
+                                                    )}
+                                                </CopyButton>
+                                            </> :
+                                            <Skeleton height={16} mt={6} radius="xl" />
+                                    }
+                                </Flex>
+                            </SimpleGrid>
+
+                            <SimpleGrid mt={16} px={32} cols={2} spacing="xl">
+                                <div>聯絡說明</div>
+                                <Flex>
+                                    {
+                                        isLoaded ?
+                                            <>{caseInfo.desc}</> :
+                                            <Skeleton height={16} mt={6} radius="xl" />
+                                    }
                                 </Flex>
                             </SimpleGrid>
                         </Box>

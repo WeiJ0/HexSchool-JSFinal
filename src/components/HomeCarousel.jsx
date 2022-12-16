@@ -4,12 +4,14 @@ import { IconHeart } from '@tabler/icons';
 
 import PortfolioCard from './cards/PortfolioCard';
 
-const HomeCarousel = () => {
+const HomeCarousel = ({type}) => {
     const IconStyle = {
         "& svg": {
             fill: "#F14A4A"
         }
     }
+
+
     return (
         <>
             <Box mt={80}>

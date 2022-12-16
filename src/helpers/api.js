@@ -46,7 +46,7 @@ requests.forEach(request => {
         },
         error => {
             console.log(error);
-            if (error && error.response.status === 401) {
+            if (error && error.response.status && error.response.status === 401) {
                 showError('登入時效已過，請重新登入');
                 localStorage.removeItem('userInfo');
                 window.location.href = '/';
@@ -120,7 +120,7 @@ export const CaseList = (cnt = 8, page = 1, query = '', status = '', type = '') 
 };
 
 export const CaseListByUser = (cnt = 8, page = 1, query = '', status = '', type = '') => {
-    let url = `/all?cnt=${cnt}&page=${page}`;
+    let url = `/all/user?cnt=${cnt}&page=${page}`;
     if (query)
         url += `&query=${query}`;
     if (type)
@@ -170,10 +170,12 @@ export const profileGet = (id) => profileRequest.get(`/?id=${id}`);
 
 export const profileDetailGet = (id) => profileRequest.get(`/detail?id=${id}`);
 
-export const profileList = (cnt = 8, page = 1, query = '') => {
+export const profileList = (cnt = 8, page = 1, query = '', order= '') => {
     let url = `/all?cnt=${cnt}&page=${page}`;
     if (query)
         url += `&query=${query}`;
+    if (order)
+        url += `&order=${order}`;
 
     return profileRequest.get(url);
 };
@@ -193,4 +195,12 @@ export const profileEdit = (formData) => {
     profileUpload.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     return profileUpload.patch(`/${id}`, formData);
 };
+
+export const profileLike = (id) => {
+    const token = getToken();
+    if (token)
+        collectRequest.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    return collectRequest.post(`/profiles/like`, { pid: id });
+}
 //#endregion

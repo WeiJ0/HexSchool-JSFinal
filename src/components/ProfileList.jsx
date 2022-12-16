@@ -97,6 +97,7 @@ const ProfileList = () => {
                                                 <ProfileCard
                                                     key={item.id}
                                                     data={item}
+                                                    isLogin={isLogin}
                                                 />
                                             </Grid.Col>
                                         )

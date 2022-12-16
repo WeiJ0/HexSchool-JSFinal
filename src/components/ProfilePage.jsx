@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay, ActionIcon } from "@mantine/core"
+import { Box, Flex, Badge, Grid, Text, Avatar, Container, LoadingOverlay, ActionIcon, Button } from "@mantine/core"
 import { Carousel } from '@mantine/carousel';
-import { IconStar } from '@tabler/icons';
+import { IconHeart, IconStar } from '@tabler/icons';
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
 
-const ContactSide = ({ data }) => {
+const ContactSide = ({ data, isLogin, collect, isCollect }) => {
     const { nickname, intro, avatar, Contact_Engineer } = data;
     const { serviceType, email, phone, facebook, line, desc } = Contact_Engineer[0];
     return (
@@ -31,6 +31,18 @@ const ContactSide = ({ data }) => {
 
             <Text mt="md" size={18}>聯絡方式</Text>
             <Text mt="sm" p={16}>{desc}</Text>
+
+            <Flex justify="center" mt="md">
+                {isLogin &&
+                    <Button
+                        leftIcon={<IconStar size={20} />}
+                        bg={isCollect() ? 'gray' : 'custom-primary.1'}
+                        onClick={collect}
+                    >
+                        {isCollect() ? '取消收藏' : '收藏該工程師'}
+                    </Button>
+                }
+            </Flex>
         </>
     )
 }
@@ -71,6 +83,10 @@ const ProfilePage = ({ id }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const isLogin = useSelector(state => {
+        return state.user.user.id
+    });
+
     const getProfile = () => {
         api.profileDetailGet(id)
             .then((res) => {
@@ -90,6 +106,7 @@ const ProfilePage = ({ id }) => {
             });
     };
 
+    // 是否已收藏該工程師
     const isCollect = () => {
         if (!userState)
             return false;
@@ -97,9 +114,31 @@ const ProfilePage = ({ id }) => {
             return profile.collect.map(item => item.userId === userState.id).includes(true);
         }
     }
-
+    // 是否已按讚該作品
+    const isLike = () => {
+        if (!userState)
+            return false;
+        else {
+            return profile.like.map(item => item.userId === userState.id).includes(true);
+        }
+    }
+    // 執行收藏
     const collect = () => {
-        api.Collect('profile', id)
+        api.Collect('engineer', profile.Users.id)
+            .then((res) => {
+                const { code, message } = res.data;
+                if (code === 0)
+                    getProfile();
+                else
+                    notify.showError(message)
+            })
+            .catch((err) => {
+                notify.showError(err.message);
+            })
+    }
+    // 執行按讚
+    const like = () => {
+        api.profileLike(id)
             .then((res) => {
                 const { code, message } = res.data;
                 if (code === 0)
@@ -135,12 +174,12 @@ const ProfilePage = ({ id }) => {
                                     <Flex justify="space-between" align="center">
                                         <Text size={24} mt="md">{profile.title}</Text>
                                         <Flex align="center">
-                                            <ActionIcon>
-                                                <IconStar
+                                            <ActionIcon variant="transparent" disabled={!isLogin}>
+                                                <IconHeart
                                                     strokeWidth={0}
                                                     variant="transparent" size={24}
-                                                    fill={isCollect() ? '#F14A4A' : '#8A8A8B'}
-                                                    onClick={collect}
+                                                    fill={isLike() ? '#F14A4A' : '#8A8A8B'}
+                                                    onClick={like}
                                                 />
                                             </ActionIcon>
                                             <Text size={18}>{profile.collect.length}</Text>
@@ -153,7 +192,7 @@ const ProfilePage = ({ id }) => {
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={3}>
-                                {<ContactSide data={profile.Users} />}
+                                {<ContactSide data={profile.Users} isLogin={isLogin} collect={collect} isCollect={isCollect} />}
                             </Grid.Col>
                         </Grid>
                     }

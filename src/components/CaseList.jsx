@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { userActions } from '../slices/userSlice';
 import { Box, Flex, Input, Button, Container, Title, Grid, SegmentedControl, Text, LoadingOverlay } from '@mantine/core';
 import { useDocumentTitle } from '@mantine/hooks';
-import { IconSearch, IconPlus, IconListDetails, IconStar } from '@tabler/icons';
+import { IconSearch, IconPlus, IconArrowRight } from '@tabler/icons';
 import * as api from "../helpers/api"
 import * as notify from "../helpers/notify"
 import { addCommasToNumber } from "../helpers/number";
@@ -98,21 +98,12 @@ const CaseItem = ({ data, userId, clickEvent, collectEvent }) => {
                         <Button
                             mr={8}
                             size="sm"
-                            variant="outline"
-                            leftIcon={<IconListDetails />}
+                            variant="subtle"
+                            rightIcon={<IconArrowRight />}
                             onClick={() => clickEvent(id)}
                         >
                             詳細內容
                         </Button>
-                        {userId &&
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                leftIcon={<IconStar />}
-                                onClick={() => collectEvent(id)}
-                            >
-                                收藏
-                            </Button>}
                     </Flex>
                 </Flex>
             </Box>

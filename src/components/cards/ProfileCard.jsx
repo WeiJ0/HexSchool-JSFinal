@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Card, Divider, Avatar, Title, Box, Text, Badge, Button, Group } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
-import { IconListDetails, IconStar } from '@tabler/icons';
+import { IconArrowRight } from '@tabler/icons';
 import defalutAvatar from '../../assets/default-avatary.jpg';
 
 const ImageDisplay = ({ images }) => {
@@ -38,14 +38,13 @@ const LanguageBadges = ({ languages }) => {
     )
 }
 
-const ProfileCard = ({ data }) => {
+const ProfileCard = ({ data, isLogin }) => {
     const router = useRouter();
 
     const { id, title, content, languages, files, Users } = data;
     const { nickname, avatar } = Users;
 
     const cardStyle = {
-        cursor: 'pointer',
         "&:hover": {
             boxShadow: "0 0 0 2px #52C8FF",
             transform: "translateY(-2px)",
@@ -79,17 +78,11 @@ const ProfileCard = ({ data }) => {
 
                 <Group mt="lg" position="right">
                     <Button
-                        leftIcon={<IconListDetails size={18} />}
+                        variant="subtle"
+                        rightIcon={<IconArrowRight size={18} />}
                         onClick={() => toDetail(id)}
-                        bg="custom-primary.1"
                     >
                         詳細內容
-                    </Button>
-                    <Button
-                        leftIcon={<IconStar size={18} />}
-                        bg="custom-primary.1"
-                    >
-                        加入收藏
                     </Button>
                 </Group>
             </Card>
