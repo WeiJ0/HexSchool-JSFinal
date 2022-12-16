@@ -46,6 +46,8 @@ const ProfileEdit = () => {
     ]);
 
     const submitForm = (values) => {
+        setIsLoading(true);
+
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('content', values.content);
@@ -64,10 +66,16 @@ const ProfileEdit = () => {
 
                 if (code === 0) {
                     notify.showSuccess('新增成功');
-                    router.push('/profile');
+                    router.push('/Profile/' + message);
                 }
-                else
+                else {
                     notify.showError(message);
+                    setIsLoading(false);
+                }
+            })
+            .catch((err) => {
+                notify.showError(err.message);
+                setIsLoading(false);
             });
     }
 

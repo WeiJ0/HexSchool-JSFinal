@@ -16,17 +16,65 @@ const ContactSide = ({ data, isLogin, collect, isCollect }) => {
                 <Avatar size="xl" src={avatar} />
             </Flex>
             <Text mt="md" align="center">{nickname}</Text>
-            <Text mt="md" align="center">{intro}</Text>
+            <Text mt="md" align="center" color="gray">{intro}</Text>
 
             <Text mt="md" size={18}>聯絡方式</Text>
 
             <Grid p={16}>
                 <Grid.Col span={4}>電子郵件</Grid.Col>
-                <Grid.Col span={8}>{email}</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {email}
+                    </Text>
+                    <ActionIcon ml={8} onClick={(e) => {
+                        e.preventDefault();
+                        window.open(`mailto:${email}?subject=我是從WeCoding網站上看到您的聯絡資訊，我想要聯絡您。`)
+                    }}>
+                        <IconMailForward size={36} />
+                    </ActionIcon>
+                </Grid.Col>
                 <Grid.Col span={4}>連絡電話</Grid.Col>
-                <Grid.Col span={8}>{phone}</Grid.Col>
-                <Grid.Col span={4}>Line ID</Grid.Col>
-                <Grid.Col span={8}>{line}</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {phone}
+                    </Text>
+                    <ActionIcon ml={8} onClick={(e) => {
+                        e.preventDefault();
+                        window.open(`tel:${phone}`)
+                    }}>
+                        <IconPhoneCall size={36} />
+                    </ActionIcon>
+                </Grid.Col>
+                <Grid.Col span={4} color="gray">Facebook</Grid.Col>
+                <Grid.Col span={8}>
+                    <Text size={14} color="gray">
+                        {facebook}
+                    </Text>
+                    <CopyButton ml={8} value={facebook}>
+                        {({ copied, copy }) => (
+                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
+                    </CopyButton>
+                </Grid.Col>
+                <Grid.Col span={4} color="gray">Line ID</Grid.Col>
+                <Grid.Col size={14} span={8}>
+                    <Text color="gray">
+                        {line}
+                    </Text>
+                    <CopyButton ml={8} value={line}>
+                        {({ copied, copy }) => (
+                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                                    {copied ? <IconCheck size={36} /> : <IconCopy size={36} />}
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
+                    </CopyButton>
+                </Grid.Col>
             </Grid>
 
             <Text mt="md" size={18}>聯絡方式</Text>
