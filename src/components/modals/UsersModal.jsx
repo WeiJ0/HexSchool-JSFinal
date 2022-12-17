@@ -130,7 +130,7 @@ const InputEmail = () => {
         <>
             <Box sx={{ maxWidth: 300 }} mx="auto">
                 <LoadingOverlay visible={isLoading} />
-                <Stepper active={step} breakpoint="sm">
+                <Stepper active={step} >
                     <Stepper.Step>
                         <form onSubmit={formCheck.onSubmit((value) => CheckEmail(value.email))}>
                             <Text weight={"bold"}>請輸入您的電子郵件 </Text>

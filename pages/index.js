@@ -1,7 +1,9 @@
-import HomeComponent from "../src/components/Home";
+import HomeComponent from "../src/pages/Home";
 
-export default function Home() {
-  return (
+const Home = () => (
+  <>
     <HomeComponent />
-  )
-}
+  </>
+);
+
+export default Home;

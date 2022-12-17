@@ -6,7 +6,7 @@ import { DatePicker } from '@mantine/dates';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
 
-import PageBreadcrumb from './PageBreadcrumb';
+import PageBreadcrumb from '../components/PageBreadcrumb';
 
 import * as notify from "../helpers/notify";
 import * as api from "../helpers/api";

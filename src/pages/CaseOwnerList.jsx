@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { userActions } from '../slices/userSlice';
 import { Box, Table, ActionIcon, Flex, Input, Button, Container, Title, Grid, SegmentedControl, Text, LoadingOverlay } from '@mantine/core';
 import { IconEdit } from '@tabler/icons';
-import PageBreadcrumb from './PageBreadcrumb';
+import PageBreadcrumb from '../components/PageBreadcrumb';
 import * as api from "../helpers/api"
 import * as notify from "../helpers/notify"
 import { formatDate } from "../helpers/date";

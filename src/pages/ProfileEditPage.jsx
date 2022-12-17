@@ -6,7 +6,7 @@ import { Box, Text, Image, Container, MultiSelect, TextInput, Textarea, FileInpu
 import { Carousel } from '@mantine/carousel';
 import { IconUpload } from '@tabler/icons';
 
-import PageBreadcrumb from "./PageBreadcrumb"
+import PageBreadcrumb from "../components/PageBreadcrumb"
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
 

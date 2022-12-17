@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import ProfilePage from "../../src/components/ProfilePage";
+import ProfilePage from "../../src/pages/ProfilePage";
 
 const Profile = () => {
     const router = useRouter();

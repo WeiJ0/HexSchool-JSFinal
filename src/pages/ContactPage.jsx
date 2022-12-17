@@ -5,7 +5,7 @@ import { Container, TextInput, MultiSelect, Divider, Textarea, Button, Radio, Gr
 import { useForm } from '@mantine/form';
 import { IconMail, IconPhone, IconBrandFacebook, IconDeviceMobile } from '@tabler/icons';
 
-import PageBreadcrumb from './PageBreadcrumb';
+import PageBreadcrumb from '../components/PageBreadcrumb';
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
 
@@ -15,7 +15,7 @@ const OffererForm = ({ type, setLoading }) => {
     const form = useForm({
         initialValues: { email: '', phone: '', facebook: '', line: '', desc: '' },
         validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email 格式錯誤'),
         },
     });
 
@@ -224,7 +224,7 @@ const Contact = ({ type }) => {
                     <Box mt={40} mb={60}>
                         <PageBreadcrumb pageData={pageData} />
                     </Box>
-                    <Box mb={60} w="50%" mx="auto">
+                    <Box mb={60} w={{base: "85%", xl: "50%"}} mx="auto">
                         {type === 'offerer' ?
                             <OffererForm type={type} setLoading={setLoading} /> :
                             <EngineerForm type={type} setLoading={setLoading} />

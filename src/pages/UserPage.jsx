@@ -6,7 +6,7 @@ import { Box, Container, Grid, TextInput, Textarea, FileInput, Title, Button, Fl
 import { IconPhoneCalling, IconList, IconStar, IconPencil, IconFile } from '@tabler/icons';
 import { userActions } from '../slices/userSlice';
 
-import PageBreadcrumb from './PageBreadcrumb';
+import PageBreadcrumb from '../components/PageBreadcrumb';
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";

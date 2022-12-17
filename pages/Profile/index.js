@@ -1,9 +1,9 @@
-import ProfileList from '../../src/components/ProfileList';
+import ProfileList from "../../src/pages/ProfileList";
 
-const Profile = () => {
-    return (
-        <ProfileList />
-    )
-}
+const Profile = () => (
+  <>
+    <ProfileList />
+  </>
+);
 
 export default Profile;

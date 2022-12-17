@@ -180,6 +180,10 @@ export const profileList = (cnt = 8, page = 1, query = '', order= '') => {
     return profileRequest.get(url);
 };
 
+export const profileHomeList = (order) =>{
+    return profileRequest.get(`/home?order=${order}`);
+}
+
 export const profileAdd = (formData) => {
     const token = formData.get('token');
     formData.delete('token');

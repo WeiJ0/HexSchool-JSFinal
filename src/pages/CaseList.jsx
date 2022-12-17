@@ -171,14 +171,14 @@ const CaseList = () => {
             <Box mt={60} mb={40}>
                 <LoadingOverlay visible={isLoading} />
                 <Container size="xl">
-                    <Box w="80%" mx="auto">
+                    <Box w={{base: "100%", xl: "80%"}} mx="auto">
                         <CaseToolbar userId={isLogin} />
                         <Box>
                             <Grid gutter={30} mt={20}>
                                 {
                                     cases.map((item, index) => {
                                         return (
-                                            <Grid.Col span={6} key={item.id}>
+                                            <Grid.Col xs={12} md={6} key={item.id}>
                                                 <CaseItem
                                                     key={item.id}
                                                     data={item}

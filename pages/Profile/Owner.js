@@ -1,11 +1,9 @@
-import CaseOwnerList from "../../src/components/CaseOwnerList";
+import CaseOwnerList from "../../src/pages/CaseOwnerList";
 
-const Profile = () => {
-    return (
-        <>
-            <CaseOwnerList />
-        </>
-    )
-}
+const Profile = () => (
+  <>
+    <CaseOwnerList />
+  </>
+);
 
 export default Profile;

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import CasePage from "../../src/components/CasePage";
+import CasePage from "../../src/pages/CasePage";
 
 const Case = () => {
     const router = useRouter();

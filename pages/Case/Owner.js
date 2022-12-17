@@ -1,11 +1,9 @@
-import CaseOwnerList from "../../src/components/CaseOwnerList";
+import CaseOwnerList from "../../src/pages/CaseOwnerList";
 
-const Case = () => {
-    return (
-        <>
-            <CaseOwnerList />
-        </>
-    )
-}
+const Case = () => (
+  <>
+    <CaseOwnerList />
+  </>
+);
 
 export default Case;

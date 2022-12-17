@@ -1,11 +1,9 @@
-import CaseList from "../../src/components/CaseList";
+import CaseList from "../../src/pages/CaseList";
 
-const Case = () => {
-    return (
-        <>
-            <CaseList />
-        </>
-    )
-}
+const Case = () => (
+  <>
+    <CaseList />
+  </>
+);
 
 export default Case;

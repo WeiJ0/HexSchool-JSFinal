@@ -1,7 +1,9 @@
-import UserPageComponent from "../src/components/UserPage";
+import UserPageComponent from "../src/pages/UserPage";
 
-export default function UserPage() {
-  return (
+const UserPage = () => (
+  <>
     <UserPageComponent />
-  )
-}
+  </>
+);
+
+export default UserPage;

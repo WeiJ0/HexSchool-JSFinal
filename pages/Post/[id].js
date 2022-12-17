@@ -1,4 +1,4 @@
-import PostComponent from "../../src/components/PostPage";
+import PostComponent from "../../src/pages/PostPage";
 
 export default function Post() {
     return (
