@@ -1,30 +1,30 @@
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useRouter } from "next/router";
 import {
-  Box,
-  Flex,
-  Badge,
-  Grid,
-  Text,
-  Avatar,
   Container,
-  LoadingOverlay,
-  ActionIcon,
+  Title,
+  TextInput,
+  Textarea,
+  FileInput,
+  NumberInput,
+  Radio,
   Button,
-  CopyButton,
-  Tooltip,
+  Group,
+  Box,
+  SimpleGrid,
+  LoadingOverlay,
 } from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
 import {
-  IconHeart,
-  IconStar,
-  IconMailForward,
-  IconPhoneCall,
-  IconCopy,
+  IconMail,
+  IconPhone,
+  IconBrandFacebook,
+  IconDeviceMobile,
+  IconCalendar,
 } from "@tabler/icons";
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
+import { useEffect } from "react";
 
 const ContactSide = ({ data, isLogin, collect, isCollect }) => {
   const { nickname, intro, avatar, Contact_Engineer } = data;
@@ -147,122 +147,33 @@ const ContactSide = ({ data, isLogin, collect, isCollect }) => {
   );
 };
 
-const ProfileImages = ({ images }) => {
-  return (
-    <>
-      <Carousel
-        align="center"
-        mt="md"
-        slideSize="90%"
-        slideGap="md"
-        loop
-        withIndicators
-      >
-        {images.map((image, index) => {
-          return (
-            <Carousel.Slide key={index}>
-              <img src={image} width="100%" style={{ objectFit: "contain" }} />
-            </Carousel.Slide>
-          );
-        })}
-      </Carousel>
-    </>
-  );
-};
-
-const LanguageBadges = ({ languages }) => {
-  return (
-    <>
-      {languages.map((language, index) => {
-        return <Badge key={language}>{language}</Badge>;
-      })}
-    </>
-  );
-};
-
-const ProfilePage = ({ id }) => {
-  const userState = useSelector((state) => state.user.user);
-  const [profile, setProfile] = useState({});
+const EngineerPage = ({ id }) => {
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [info, setInfo] = useState({});
 
   const isLogin = useSelector((state) => {
     return state.user.user.id;
   });
 
-  const getProfile = () => {
-    api
-      .profileDetailGet(id)
-      .then((res) => {
-        const { code, message } = res.data;
-        if (code === 0) {
-          setProfile(message);
-          setIsLoaded(true);
-        } else notify.showError(message);
+  const getInfo = () => {
+    api.engineersGet(id).then((res) => {
+      const { code, message } = res.data;
 
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        notify.showError(err.message);
-      });
-  };
+      if (code !== 0) {
+        notify.showError(message);
+        router.push("/");
+        return;
+      }
 
-  // 是否已收藏該工程師
-  const isCollect = () => {
-    if (!userState) return false;
-    else {
-      return profile.collect
-        .map((item) => item.userId === userState.id)
-        .includes(true);
-    }
-  };
-  // 是否已按讚該作品
-  const isLike = () => {
-    if (!userState) return false;
-    else {
-      return profile.like
-        .map((item) => item.userId === userState.id)
-        .includes(true);
-    }
-  };
-  // 執行收藏
-  const collect = () => {
-    api
-      .Collect("engineer", profile.Users.id)
-      .then((res) => {
-        const { code, message } = res.data;
-        if (code === 0) {
-          getProfile();
-          notify.showSuccess(message);
-        } else notify.showError(message);
-      })
-      .catch((err) => {
-        notify.showError(err.message);
-      });
-  };
-  // 執行按讚
-  const like = () => {
-    api
-      .profileLike(id)
-      .then((res) => {
-        const { code, message } = res.data;
-        if (code === 0) {
-          notify.showSuccess(message);
-          getProfile();
-        } else notify.showError(message);
-      })
-      .catch((err) => {
-        notify.showError(err.message);
-      });
+      setInfo(message);
+      setIsLoaded(true);
+    });
   };
 
   useEffect(() => {
-    if (id) getProfile();
+    if (id) getInfo();
   }, [id]);
-
-  useEffect(() => {}, [profile]);
-  useEffect(() => {}, [userState]);
 
   return (
     <>
@@ -273,41 +184,9 @@ const ProfilePage = ({ id }) => {
         <Box mt={20} mb={60}>
           {isLoaded && (
             <Grid gutter={36}>
-              <Grid.Col xs={12} lg={9}>
-                <ProfileImages images={profile.files} />
-                <Box px={16}>
-                  <Flex justify="space-between" align="center">
-                    <Text size={24} mt="md">
-                      {profile.title}
-                    </Text>
-                    <Flex align="center">
-                      <ActionIcon variant="transparent" disabled={!isLogin}>
-                        <IconHeart
-                          strokeWidth={0}
-                          variant="transparent"
-                          size={24}
-                          fill={isLike() ? "#F14A4A" : "#8A8A8B"}
-                          onClick={like}
-                        />
-                      </ActionIcon>
-                      <Text size={18}>{profile.like.length}</Text>
-                    </Flex>
-                  </Flex>
-                  <Box mt="md">
-                    <LanguageBadges languages={profile.languages.split(",")} />
-                  </Box>
-                  <Text mt="md">{profile.content}</Text>
-                </Box>
-              </Grid.Col>
+              <Grid.Col xs={12} lg={9}></Grid.Col>
               <Grid.Col xs={12} lg={3}>
-                {
-                  <ContactSide
-                    data={profile.Users}
-                    isLogin={isLogin}
-                    collect={collect}
-                    isCollect={isCollect}
-                  />
-                }
+                {<ContactSide data={info} />}
               </Grid.Col>
             </Grid>
           )}
@@ -317,4 +196,4 @@ const ProfilePage = ({ id }) => {
   );
 };
 
-export default ProfilePage;
+export default EngineerPage;

@@ -162,13 +162,13 @@ const Post = ({ isEdit }) => {
                         />
 
 
-                        <FileInput
+                        {/* <FileInput
                             mt="sm"
                             label="案件附件"
                             description="限上傳圖檔或是 pdf，至多 5 個"
                             placeholder='點擊選擇'
                             multiple
-                        />
+                        /> */}
 
                         <SimpleGrid mt="sm" cols={2}>
                             <div>
@@ -177,6 +177,7 @@ const Post = ({ isEdit }) => {
                                     icon={<IconCalendar size={16} />}
                                     label="預計完成時間"
                                     placeholder="最短需一天時間"
+                                    inputFormat="YYYY/MM/DD"
                                     minDate={dayjs(new Date()).add(1, 'days').toDate()}
                                     {...form.getInputProps('finishDate')}
                                 />

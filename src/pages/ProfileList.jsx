@@ -20,11 +20,10 @@ import ProfileCard from "../components/cards/ProfileCard";
 import * as notify from "../helpers/notify";
 import * as api from "../helpers/api";
 
-const ProfileToolbar = ({ userId }) => {
+const ProfileToolbar = ({ userId, searchText, setSearchText }) => {
   const router = useRouter();
   const { page, query, status, type } = router.query;
   const [uid, setUid] = useState("");
-  const [searchText, setSearchText] = useState(query || "");
 
   useEffect(() => {
     setUid(userId);
@@ -45,7 +44,7 @@ const ProfileToolbar = ({ userId }) => {
             <Button
               bg="custom-primary.1"
               leftIcon={<IconSearch />}
-              onClick={() => router.push(`/Case/?query=${searchText}`)}
+              onClick={() => router.push(`/Profile/?query=${searchText}`)}
             >
               搜尋
             </Button>
@@ -67,12 +66,16 @@ const ProfileToolbar = ({ userId }) => {
 };
 
 const ProfileList = () => {
+  const router = useRouter();
+  const { page, query, status, type } = router.query;
+  const [searchText, setSearchText] = useState(query || "");
+
   const [profiles, setProfiles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useDocumentTitle("作品集列表 - WeCoding");
 
   const getProfileList = () => {
-    api.profileList().then((res) => {
+    api.profileList(8, 1, searchText).then((res) => {
       const { code, message } = res.data;
 
       if (code === 0) setProfiles(message);
@@ -90,13 +93,21 @@ const ProfileList = () => {
     getProfileList();
   }, []);
 
+  useEffect(() => {
+    getProfileList();
+  }, [router]);
+
   return (
     <>
       <Box mt={60} mb={40}>
         <LoadingOverlay visible={isLoading} />
         <Container size="xl">
           <Box w="80%" mx="auto">
-            <ProfileToolbar userId={isLogin} />
+            <ProfileToolbar
+              userId={isLogin}
+              searchText={searchText}
+              setSearchText={setSearchText}
+            />
             <Box>
               <Grid gutter={30} mt={{ base: 12, xl: 20 }}>
                 {profiles.map((item, index) => {

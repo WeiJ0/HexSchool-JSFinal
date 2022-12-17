@@ -1,8 +1,8 @@
-import CaseOwnerList from "../../src/pages/CaseOwnerList";
+import ProfileOwnerList from "../../src/pages/ProfileOwnerList";
 
 const Profile = () => (
   <>
-    <CaseOwnerList />
+    <ProfileOwnerList />
   </>
 );
 
