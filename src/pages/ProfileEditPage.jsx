@@ -72,23 +72,43 @@ const ProfileEdit = () => {
     formData.append("uid", userInfo.id);
     formData.append("token", userInfo.token);
 
-    api
-      .profileEdit(formData)
-      .then((res) => {
-        const { code, message } = res.data;
+    if (id) {
+      api
+        .profileEdit(formData)
+        .then((res) => {
+          const { code, message } = res.data;
 
-        if (code === 0) {
-          notify.showSuccess("新增成功");
-          router.push("/Profile/" + message);
-        } else {
-          notify.showError(message);
+          if (code === 0) {
+            notify.showSuccess("修改成功");
+            router.push("/Profile/" + message);
+          } else {
+            notify.showError(message);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          notify.showError(err.message);
           setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        notify.showError(err.message);
-        setIsLoading(false);
-      });
+        });
+    } else {
+      api
+        .profileAdd(formData)
+        .then((res) => {
+          const { code, message } = res.data;
+
+          if (code === 0) {
+            notify.showSuccess("新增成功");
+            router.push("/Profile/" + message);
+          } else {
+            notify.showError(message);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          notify.showError(err.message);
+          setIsLoading(false);
+        });
+    }
   };
 
   const initForm = () => {

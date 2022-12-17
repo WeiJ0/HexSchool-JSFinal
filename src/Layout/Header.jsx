@@ -56,6 +56,13 @@ const Header = () => {
     }
   };
 
+  const clickEngineerList = () => {
+    if (router.route !== "/Engineer") {
+      router.push("/Engineer");
+      setOpenMenu(false);
+    }
+  }
+
   const clickProfileList = () => {
     if (router.route !== "/Profile") {
       router.push("/Profile");
@@ -127,12 +134,21 @@ const Header = () => {
                   <Button
                     size="xl"
                     color="custom-primary.1"
-                    onClick={clickProfileList}
+                    onClick={clickEngineerList}
                     variant="subtle"
                     sx={navLinkStyle}
                   >
                     找工程師
                   </Button>
+                  <Button
+                      size="xl"
+                      color="custom-primary.1"
+                      variant="subtle"
+                      onClick={clickProfileList}
+                      sx={navLinkStyle}
+                    >
+                      看作品集
+                    </Button>
                   <Button
                     size="xl"
                     color="custom-primary.1"
@@ -190,10 +206,19 @@ const Header = () => {
                       size="xl"
                       color="custom-primary.1"
                       variant="subtle"
-                      onClick={clickProfileList}
+                      onClick={clickEngineerList}
                       sx={navLinkStyle}
                     >
                       找工程師
+                    </Button>
+                    <Button
+                      size="xl"
+                      color="custom-primary.1"
+                      variant="subtle"
+                      onClick={clickProfileList}
+                      sx={navLinkStyle}
+                    >
+                      看作品集
                     </Button>
                     <Button
                       size="xl"

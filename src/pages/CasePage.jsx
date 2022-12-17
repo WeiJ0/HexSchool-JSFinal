@@ -32,7 +32,7 @@ import { addCommasToNumber } from "../helpers/number";
 
 const ContactSide = ({ data, isLogin, collect, isCollect }) => {
   console.log(data);
-  const { Users, desc, email, facebook, line, phone } = data;
+  const { Users, desc, email, facebook, line, phone, userId } = data;
   const { nickname, avatar } = Users;
 
   return (
@@ -147,6 +147,7 @@ const ContactSide = ({ data, isLogin, collect, isCollect }) => {
           <Flex justify="center" mt="md">
             {isLogin && (
               <Button
+                disabled={isLogin === userId}
                 leftIcon={<IconStar size={20} />}
                 bg={isCollect ? "gray" : "custom-primary.1"}
                 onClick={collect}
@@ -213,8 +214,8 @@ const CasePage = ({ id }) => {
       .then((res) => {
         const { code, message } = res.data;
         if (code === 0) {
-          notify.showSuccess(message);     
-          initCaseInfo();     
+          notify.showSuccess(message);
+          initCaseInfo();
         } else {
           notify.showError(message);
         }

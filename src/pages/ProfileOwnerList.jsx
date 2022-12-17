@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDocumentTitle } from '@mantine/hooks';
+import { useDocumentTitle } from "@mantine/hooks";
 import { useSelector, useDispatch } from "react-redux";
 import { userActions } from "../slices/userSlice";
 import {
@@ -8,17 +8,13 @@ import {
   Table,
   ActionIcon,
   Flex,
-  Input,
   Button,
   Container,
-  Title,
-  Grid,
-  SegmentedControl,
   Text,
   LoadingOverlay,
   Image,
 } from "@mantine/core";
-import { IconEdit } from "@tabler/icons";
+import { IconEdit, IconPlus } from "@tabler/icons";
 import PageBreadcrumb from "../components/PageBreadcrumb";
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
@@ -27,7 +23,7 @@ import { formatDate } from "../helpers/date";
 const ProfileOwnerList = () => {
   const router = useRouter();
   const { page, query, status, type } = router.query;
-  useDocumentTitle('我的作品集 - WeCoding')
+  useDocumentTitle("我的作品集 - WeCoding");
   const [profiles, setProfile] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -44,11 +40,6 @@ const ProfileOwnerList = () => {
       .profileListByUser(8, 1)
       .then((res) => {
         const { code, message } = res.data;
-
-        if (code === -2) {
-          setLoading(false);
-          return;
-        }
 
         if (code !== 0) {
           notify.showError(message);
@@ -72,7 +63,7 @@ const ProfileOwnerList = () => {
     return (
       <tr key={id}>
         <td>
-            <Image src={files[0]} />
+          <Image src={files[0]} />
         </td>
         <td>{title}</td>
         <td>{formatDate(created_at, "YYYY-MM-DD HH:mm:ss")}</td>
@@ -101,7 +92,16 @@ const ProfileOwnerList = () => {
           </Box>
           <Box w="80%" mx="auto">
             <Box>
-              <Table>
+              <Flex justify="flex-end">
+                <Button
+                  bg="custom-primary.1"
+                  leftIcon={<IconPlus />}
+                  onClick={() => router.push("/Profile/Edit")}
+                >
+                  新增作品集
+                </Button>
+              </Flex>
+              <Table mt={16}>
                 <thead>
                   <tr>
                     <th width="30%">封面預覽</th>

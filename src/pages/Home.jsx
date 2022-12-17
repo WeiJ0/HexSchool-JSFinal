@@ -221,7 +221,7 @@ const NewCases = ({ width, height }) => {
                   ) : (
                     cases.map((item, index) => {
                       return (
-                        <Carousel.Slide>
+                        <Carousel.Slide key={index}>
                           <CaseCard data={item} />
                         </Carousel.Slide>
                       );

@@ -21,15 +21,18 @@ import {
   IconMailForward,
   IconPhoneCall,
   IconCopy,
+  IconCheck,
 } from "@tabler/icons";
 
 import * as api from "../helpers/api";
 import * as notify from "../helpers/notify";
 
 const ContactSide = ({ data, isLogin, collect, isCollect }) => {
-  const { nickname, intro, avatar, Contact_Engineer } = data;
+  console.log(data);
+  const { nickname, intro, avatar, Contact_Engineer, id: userId } = data;
   const { serviceType, email, phone, facebook, line, desc } =
     Contact_Engineer[0];
+
   return (
     <>
       <Flex justify="center" mt={16}>
@@ -135,6 +138,7 @@ const ContactSide = ({ data, isLogin, collect, isCollect }) => {
       <Flex justify="center" mt="md">
         {isLogin && (
           <Button
+            disabled={userId === isLogin}
             leftIcon={<IconStar size={20} />}
             bg={isCollect() ? "gray" : "custom-primary.1"}
             onClick={collect}
