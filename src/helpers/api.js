@@ -6,8 +6,8 @@ const getToken = () => {
   return JSON.parse(localStorage.getItem("userInfo"))["token"];
 };
 
-/* const URL = 'https://wecoding-express-weij0.vercel.app'; */
-const URL = "http://localhost:3001";
+const URL = 'https://wecoding-express-weij0.vercel.app';
+/* const URL = "http://localhost:3001"; */
 
 const userRequest = axios.create({
   baseURL: `${URL}/users/`,

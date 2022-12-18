@@ -263,15 +263,15 @@ const Contact = ({ type }) => {
   const [isLoading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   useDocumentTitle(
-    type === "Offerer" ? "發案方聯絡方式維護 - WeCoding" : "工程師聯絡方式維護 - WeCoding"
+    type === "offerer" ? "發案方聯絡方式維護 - WeCoding" : "工程師聯絡方式維護 - WeCoding"
   );
 
   const pageData = [
     { title: "首頁", href: "/" },
     { title: "會員中心", href: "/User" },
     {
-      title: type === "Offerer" ? "發案方聯絡方式維護" : "工程師聯絡方式維護",
-      href: type === "Offerer" ? "/Contact/Offerer" : "/Contact/Engineer",
+      title: type === "offerer" ? "發案方聯絡方式維護" : "工程師聯絡方式維護",
+      href: type === "offerer" ? "/Contact/Offerer" : "/Contact/Engineer",
     },
   ];
 
